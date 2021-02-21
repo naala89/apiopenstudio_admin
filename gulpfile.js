@@ -6,6 +6,7 @@ const minify_css = require("gulp-minify-css");
 const clean = require('gulp-clean');
 const flatten = require('gulp-flatten');
 const babel = require('gulp-babel');
+const sass = require("gulp-sass");
 
 function clean_style() {
     return src(config.paths.styles.dest + '*')
@@ -14,6 +15,7 @@ function clean_style() {
 
 function style() {
     return src(config.paths.styles.src)
+        .pipe(sass())
         .pipe(minify_css())
         .pipe(dest(config.paths.styles.dest))
 }
