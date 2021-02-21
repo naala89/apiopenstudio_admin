@@ -7,6 +7,7 @@ const clean = require('gulp-clean');
 const flatten = require('gulp-flatten');
 const babel = require('gulp-babel');
 const sass = require("gulp-sass");
+const eslint = require('gulp-eslint');
 
 function clean_style() {
     return src(config.paths.styles.dest + '*')
@@ -33,6 +34,9 @@ function clean_script() {
 
 function script() {
     return src(config.paths.scripts.src)
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError())
         .pipe(concat('apiopenstudio.min.js'))
         .pipe(babel())
         .pipe(uglify())
