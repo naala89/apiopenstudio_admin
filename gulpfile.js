@@ -45,7 +45,7 @@ function vendor_script() {
 
 const css = series(clean_style, parallel(style, vendor_style));
 const js = series(clean_script, parallel(script, vendor_script));
-const build = series(parallel(clean_style, clean_script), parallel(css, js));
+const build = parallel(css, js);
 
 exports.style = css;
 exports.script = js;
