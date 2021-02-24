@@ -12,3 +12,18 @@ Installation
 3. Run gulp:
 
    ```gulp```
+
+4. Install from composer:
+
+   ```composer install```
+
+Configuration
+=============
+
+   ```cp example.settings.yml settings.yml```
+
+Set the following settings as a minimum:
+
+1. api.url
+2. admin.url
+3. admin.base_path

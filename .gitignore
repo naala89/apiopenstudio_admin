@@ -8,6 +8,7 @@
 public/css/
 public/js/
 public/images/
+settings.yml
 
 #composer
 /vendor

@@ -1,0 +1,11 @@
+{
+  "title": "Installation",
+  "content": [
+    "requirements.md",
+    "server-setup/bookdown.json",
+    "installation.md",
+    "settings.yml.md",
+    "docker/bookdown.json"
+  ],
+  "tocDepth": 1
+}
