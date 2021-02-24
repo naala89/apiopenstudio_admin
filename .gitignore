@@ -10,11 +10,9 @@ public/js/
 public/images/
 settings.yml
 
-#composer
+#3rd-party
 /vendor
 composer.lock
 /composer
-
-#node
 node_modules
 package-lock.json
