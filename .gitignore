@@ -9,6 +9,7 @@ public/css/
 public/js/
 public/images/
 settings.yml
+certs/
 
 #composer
 /vendor
