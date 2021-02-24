@@ -6,6 +6,8 @@ const minify_css = require("gulp-minify-css");
 const clean = require('gulp-clean');
 const flatten = require('gulp-flatten');
 const babel = require('gulp-babel');
+const sass = require("gulp-sass");
+const eslint = require('gulp-eslint');
 
 function clean_style() {
     return src(config.paths.styles.dest + '*')
@@ -14,6 +16,7 @@ function clean_style() {
 
 function style() {
     return src(config.paths.styles.src)
+        .pipe(sass())
         .pipe(minify_css())
         .pipe(dest(config.paths.styles.dest))
 }
@@ -31,6 +34,9 @@ function clean_script() {
 
 function script() {
     return src(config.paths.scripts.src)
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError())
         .pipe(concat('apiopenstudio.min.js'))
         .pipe(babel())
         .pipe(uglify())
@@ -45,7 +51,7 @@ function vendor_script() {
 
 const css = series(clean_style, parallel(style, vendor_style));
 const js = series(clean_script, parallel(script, vendor_script));
-const build = series(parallel(clean_style, clean_script), parallel(css, js));
+const build = parallel(css, js);
 
 exports.style = css;
 exports.script = js;

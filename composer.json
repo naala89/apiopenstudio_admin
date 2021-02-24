@@ -1,0 +1,50 @@
+{
+  "name": "apiopenstudio/apiopenstudio",
+  "description": "Build APIs faster & at less cost",
+  "license": "MPL-2.0",
+  "keywords": [
+    "api",
+    "open-source",
+    "multi-tool",
+    "business logic",
+    "studio",
+    "open",
+    "community"
+  ],
+  "type": "project",
+  "homepage": "https://www.apiopenstudio.com/",
+  "readme": "./README.md",
+  "authors": [
+    {
+      "name": "John Avery",
+      "homepage": "https://gitlab.com/john89"
+    }
+  ],
+  "support": {
+    "email": "contact@apiopenstudio.com",
+    "issues": "https://gitlab.com/john89/apiopenstudio/-/issues",
+    "forum": "https://www.apiopenstudio.com/questions-answers/",
+    "wiki": "https://wiki.apiopenstudio.com/",
+    "source": "https://github.com/naala89/apiopenstudio"
+  },
+  "require-dev": {
+    "components/jquery": "^3.3",
+    "squizlabs/php_codesniffer": "*",
+    "bookdown/bookdown": "^1.1"
+  },
+  "require": {
+    "slim/twig-view": "2.4",
+    "slim/slim": "~3.0",
+    "monolog/monolog": "^1.23",
+    "theorchard/monolog-cascade": "^0.5.0",
+    "slim/flash": "^0.4.0",
+    "guzzlehttp/guzzle": "^6.3",
+    "symfony/yaml": "^4.4",
+    "mustangostang/spyc": "^0.6.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "ApiOpenStudioAdmin\\": "includes/"
+    }
+  }
+}

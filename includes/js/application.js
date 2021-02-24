@@ -11,33 +11,32 @@
  */
 
 $(document).ready(function () {
+  /**
+   * Edit application modal.
+   */
+  $('.modal-app-edit-trigger').click(function () {
+    const modal = $('#modal-app-edit')
+    const accid = $(this).attr('accid')
+    const appid = $(this).attr('appid')
+    const name = $(this).attr('name')
+    const selectAccid = modal.find('select[name="edit-app-accid"]')
 
-    /**
-     * Edit application modal.
-     */
-    $('.modal-app-edit-trigger').click(function () {
-        var modal = $('#modal-app-edit');
-        var accid = $(this).attr('accid');
-        var appid = $(this).attr('appid');
-        var name = $(this).attr('name');
-        var select_accid = modal.find('select[name="edit-app-accid"]');
+    selectAccid.find('option[value="' + accid + '"]').prop('selected', true)
+    selectAccid.formSelect()
+    modal.find('input[name="edit-app-appid"]').val(appid)
+    modal.find('input[name="edit-app-name"]').val(name)
+    modal.modal('open')
+  })
 
-        select_accid.find('option[value="' + accid + '"]').prop('selected', true);
-        select_accid.formSelect();
-        modal.find('input[name="edit-app-appid"]').val(appid);
-        modal.find('input[name="edit-app-name"]').val(name);
-        modal.modal('open');
-    });
-
-    /**
-     * Delete application modal.
-     */
-    $('.modal-app-delete-trigger').click(function () {
-        var modal = $('#modal-app-delete');
-        var appid = $(this).attr('appid');
-        var name = $(this).attr('name');
-        modal.find('input[name="delete-app-appid"]').val(appid);
-        modal.find('#delete-app-name').html(name);
-        modal.modal('open');
-    });
-});
+  /**
+   * Delete application modal.
+   */
+  $('.modal-app-delete-trigger').click(function () {
+    const modal = $('#modal-app-delete')
+    const appid = $(this).attr('appid')
+    const name = $(this).attr('name')
+    modal.find('input[name="delete-app-appid"]').val(appid)
+    modal.find('#delete-app-name').html(name)
+    modal.modal('open')
+  })
+})

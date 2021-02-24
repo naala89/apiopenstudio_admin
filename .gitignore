@@ -8,13 +8,11 @@
 public/css/
 public/js/
 public/images/
+settings.yml
 
-#composer
+#3rd-party
 /vendor
 composer.lock
 /composer
-
-#node
 node_modules
-npm-debug.log
 package-lock.json
