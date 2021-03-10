@@ -20,8 +20,8 @@
           </a>
         </li>
           {% for i in start..end %}
-            <li class="{% if page == i %}active{% else %}waves-effect{% endif %}">
-              <a href="{{ url }}&page={{ i }}">{{ i }}</a>
+            <li class="{% if page == i %}active{% endif %}">
+              <a href="{{ url }}&page={{ i }}" class="{% if page == i %}aos-dark-blue{% else %}aos-light-blue{% endif %} white-text">{{ i }}</a>
             </li>
           {% endfor %}
           <li class="{% if page == pages %}disabled{% endif %}">

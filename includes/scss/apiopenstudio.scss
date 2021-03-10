@@ -1,14 +1,46 @@
+@import 'variables';
+
+.aos-light-blue {
+  background-color: $aos-light-blue;
+}
+.aos-light-blue-text {
+  color: $aos-light-blue;
+}
+.aos-dark-blue {
+  background-color: $aos-dark-blue;
+}
+.aos-dark-blue-text {
+  color: $aos-dark-blue;
+}
+.aos-dark-green {
+  background-color: $aos-dark-green;
+}
+.aos-dark-green-text {
+  color: $aos-dark-green;
+}
+
 body {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
 }
 
-nav .brand-logo {
-  background-image: url("/images/Krokodil-lineart.svg");
-  background-repeat: no-repeat;
-  background-size: contain;
-  padding-left: 5rem;
+footer.page-footer {
+  a {
+    color: $aos-dark-green;
+  }
+}
+
+.logo-wrapper {
+  img {
+    height: 3rem;
+    width: auto;
+  }
+
+  .logo-text {
+    font-family: 'Maven Pro', sans-serif;
+    font-size: 1.5rem;
+  }
 }
 
 main {
@@ -23,9 +55,34 @@ main {
   margin-right: 1rem;
 }
 
-.close-apiopenstudio-alert{
+.close-apiopenstudio-alert {
   position: absolute;
   right: 10px;
   top: 10px;
   cursor:pointer;
+}
+
+div.truncate {
+  display: inherit;
+}
+
+.btn,
+.btn-floating,
+.btn:visited,
+.btn-floating:visited,
+.btn:active,
+.btn-floating:active,
+.btn:focus,
+.btn-floating:focus,
+.collapsible-header {
+  background-color: $aos-dark-blue
+}
+
+.btn:hover,
+.btn-floating:hover {
+  background-color: $aos-light-blue
+}
+
+.collapsible-header {
+  color: white;
 }

@@ -10,7 +10,7 @@
     <form method="get" action="/accounts">
       <div class="col s1 ">
         {% if isAdmin == true %}
-          <a class="btn-floating btn-large waves-effect waves-light green modal-trigger hoverable" href="#modal-acc-create"><i class="material-icons">add</i></a>
+          <a class="btn-floating btn-large modal-trigger hoverable" href="#modal-acc-create"><i class="material-icons">add</i></a>
         {% endif %}
       </div>
       <div class="col s6">
@@ -29,29 +29,29 @@
         </div>
       </div>
       <div class="col s1">
-        <button class="btn waves-effect waves-light" type="submit">Filter
+        <button class="btn" type="submit">Filter
           <i class="material-icons right">send</i>
         </button>
       </div>
     </form>
   </div>
 
-  <div class="row teal lighten-1 white-text">
-    <h6 class="col col-height s10 valign-wrapper">Name</h6>
-    <h6 class="col col-height s2 valign-wrapper">Actions</h6>
+  <div class="row aos-light-blue aos-blue-text">
+    <h6 class="col s10 col-height valign-wrapper">Name</h6>
+    <h6 class="col s2 col-height valign-wrapper">Actions</h6>
   </div>
   {% for account in accounts %}
     <div class="row hoverable">
-      <div class="col col-height s10 valign-wrapper">
+      <div class="col s10 col-height valign-wrapper">
         <a href="/applications?account_filter={{ account.accid }}" title="View applications under this account.">{{ account.name }}</a>
       </div>
-      <div class="col col-height s2 valign-wrapper">
+      <div class="col s2 col-height valign-wrapper">
         {% if isAdmin == true and account.accid != 1 %}
           <a class="btn-floating btn-small white hoverable">
-            <i class="material-icons modal-acc-edit-trigger black-text" accid="{{ account.accid }}" acc-name="{{ account.name }}" title="Edit this account.">edit</i>
+            <i class="material-icons modal-acc-edit-trigger aos-dark-blue" accid="{{ account.accid }}" acc-name="{{ account.name }}" title="Edit this account.">edit</i>
           </a>
           <a class="btn-floating btn-small white hoverable">
-            <i class="material-icons modal-acc-delete-trigger black-text" accid="{{ account.accid }}" acc-name="{{ account.name }}" title="Delete this account.">delete</i>
+            <i class="material-icons modal-acc-delete-trigger red" accid="{{ account.accid }}" acc-name="{{ account.name }}" title="Delete this account.">delete</i>
           </a>
         {% endif %}
       </div>

@@ -12,7 +12,7 @@
     <form method="get" action="/applications">
       {% if 'Administrator' in roles or 'Account manager' in roles or 'Application manager' in roles %}
         <div class="col s1">
-          <a class="btn-floating btn-large waves-effect waves-light green modal-trigger hoverable" href="#modal-app-create"><i class="material-icons">add</i></a>
+          <a class="btn-floating btn-large modal-trigger hoverable" href="#modal-app-create"><i class="material-icons">add</i></a>
         </div>
       {% endif %}
       <div class="col s3">
@@ -36,7 +36,7 @@
           <label for="filter">Filter by account.</label>
         </div>
       </div>
-      <div class="col s3">
+      <div class="col s2">
         <div class="input-field">
           <select class="input-field" name="order_by">
             <option value="account" {% if params['order_by'] == "account" %}selected{% endif %}>Account</option>
@@ -55,7 +55,7 @@
         </div>
       </div>
       <div class="col s1">
-        <button class="btn waves-effect waves-light" type="submit">Filter
+        <button class="btn" type="submit">Filter
           <i class="material-icons right">send</i>
         </button>
       </div>
@@ -69,10 +69,10 @@
       </div>
     </div>
   {% else %}
-    <div class="row teal lighten-1 white-text">
-      <h6 class="col col-height s5 valign-wrapper">Account</h6>
-      <h6 class="col col-height s5 valign-wrapper">Application</h6>
-      <h6 class="col col-height s2 valign-wrapper">Actions</h6>
+    <div class="row aos-light-blue aos-dark-blue-text">
+      <h6 class="col s5 col-height valign-wrapper">Account</h6>
+      <h6 class="col s5 col-height valign-wrapper">Application</h6>
+      <h6 class="col s2 col-height valign-wrapper">Actions</h6>
     </div>
       {% for application in applications %}
         {% for acc in accounts %}
@@ -81,19 +81,19 @@
           {% endif %}
         {% endfor %}
         <div class="row hoverable">
-          <div class="col col-height s5 valign-wrapper">
+          <div class="col s5 col-height valign-wrapper">
             <a href="/applications?account_id={{ application.accid }}" title="Filter applications for this account.">{{ account.name }}</a>
           </div>
-          <div class="col col-height s5 valign-wrapper">
+          <div class="col s5 col-height valign-wrapper">
             {{ application.name }}
           </div>
-          <div class="col col-height s2 valign-wrapper">
+          <div class="col s2 col-height valign-wrapper">
             {% if application.appid > 2 and ('Administrator' in roles or 'Account manager' in roles or 'Application manager' in roles) %}
               <a class="btn-floating btn-small white hoverable">
-                <i class="material-icons modal-app-edit-trigger black-text" accid="{{ application.accid }}" appid="{{ application.appid }}" name="{{ application.name }}" title="Edit this application.">edit</i>
+                <i class="material-icons modal-app-edit-trigger aos-dark-blue" accid="{{ application.accid }}" appid="{{ application.appid }}" name="{{ application.name }}" title="Edit this application.">edit</i>
               </a>
               <a class="btn-floating btn-small white hoverable">
-                <i class="material-icons modal-app-delete-trigger black-text" appid="{{ application.appid }}" name="{{ application.name }}" title="Delete this application.">delete</i>
+                <i class="material-icons modal-app-delete-trigger red" appid="{{ application.appid }}" name="{{ application.name }}" title="Delete this application.">delete</i>
               </a>
             {% endif %}
           </div>

@@ -9,7 +9,7 @@
     <div class="row ">
         <form method="get" action="/vars">
             <div class="col s1 ">
-                <a class="btn-floating btn-large waves-effect waves-light green modal-trigger modal-var-create-trigger hoverable" href="#modal-var-create"><i class="material-icons">add</i></a>
+                <a class="btn-floating btn-large modal-trigger modal-var-create-trigger hoverable" href="#modal-var-create"><i class="material-icons">add</i></a>
             </div>
             <div class="col s2">
                 <div class="input-field">
@@ -60,14 +60,14 @@
                 </div>
             </div>
             <div class="col s1">
-                <button class="btn waves-effect waves-light" type="submit">Filter
+                <button class="btn" type="submit">Filter
                     <i class="material-icons right">send</i>
                 </button>
             </div>
         </form>
     </div>
 
-    <div class="row teal lighten-1 white-text">
+    <div class="row aos-light-blue aos-dark-blue-text">
         <h6 class="col col-height s2 valign-wrapper">Account</h6>
         <h6 class="col col-height s2 valign-wrapper">Application</h6>
         <h6 class="col col-height s2 valign-wrapper">Key</h6>
@@ -99,10 +99,10 @@
             <div class="col col-height s4 valign-wrapper">{{ (var.val|length > 100 ? var.val|slice(0, 100) ~ '…'|escape : var.val) }}</div>
             <div class="col col-height s2 valign-wrapper">
                 <a class="btn-floating btn-small white hoverable modal-trigger modal-var-edit-trigger" vid="{{ var.vid }}" appid="{{ var.appid }}" key="{{ var.key }}" val="{{ var.val }}" href="#modal-var-edit">
-                    <i class="material-icons black-text" title="Edit this var.">edit</i>
+                    <i class="material-icons aos-dark-blue" title="Edit this var.">edit</i>
                 </a>
                 <a class="btn-floating btn-small white hoverable modal-trigger modal-var-delete-trigger" vid="{{ var.vid }}" key="{{ var.key }}" href="#modal-var-delete">
-                    <i class="material-icons black-text" title="Delete this var.">delete</i>
+                    <i class="material-icons red" title="Delete this var.">delete</i>
                 </a>
             </div>
         </div>
