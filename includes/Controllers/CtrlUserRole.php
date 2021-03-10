@@ -20,10 +20,6 @@ namespace ApiOpenStudioAdmin\Controllers;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
-//use ApiOpenStudio\Admin\Account;
-//use ApiOpenStudio\Admin\Application;
-//use ApiOpenStudio\Admin\UserAccount;
-//use ApiOpenStudio\Admin\UserRole;
 
 /**
  * Class CtrlUserRole.
