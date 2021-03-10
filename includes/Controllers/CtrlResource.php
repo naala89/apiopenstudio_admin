@@ -551,7 +551,7 @@ class CtrlResource extends CtrlBase
             return $response->withStatus(302)->withHeader('Location', '/');
         }
 
-        $directory = $this->settings['api']['base_path'] . $this->settings['api']['dir_tmp'];
+        $directory = $this->settings['admin']['dir_tmp'];
         $uploadedFiles = $request->getUploadedFiles();
         $uploadedFile = $uploadedFiles['resource_file'];
 

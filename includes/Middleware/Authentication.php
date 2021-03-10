@@ -81,9 +81,9 @@ class Authentication
         $username = isset($data['username']) ? $data['username'] : '';
         $password = isset($data['password']) ? $data['password'] : '';
 
-        $domain = $this->settings['api']['url'];
-        $account = $this->settings['api']['core_account'];
-        $application = $this->settings['api']['core_application'];
+        $domain = $this->settings['admin']['api_url'];
+        $account = $this->settings['admin']['core_account'];
+        $application = $this->settings['admin']['core_application'];
         $client = new Client(['base_uri' => "$domain/$account/$application/"]);
 
         if (!empty($username) || !empty($password)) {

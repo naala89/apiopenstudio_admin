@@ -139,10 +139,10 @@ class CtrlBase
     public function apiCall(string $method, string $uri, array $requestOptions = [])
     {
         try {
-            $requestOptions['protocols'] = $this->settings['api']['protocols'];
-            $domain = $this->settings['api']['url'];
-            $account = $this->settings['api']['core_account'];
-            $application = $this->settings['api']['core_application'];
+            $requestOptions['protocols'] = $this->settings['admin']['protocols'];
+            $domain = $this->settings['admin']['api_url'];
+            $account = $this->settings['admin']['core_account'];
+            $application = $this->settings['admin']['core_application'];
             $client = new Client(['base_uri' => "$domain/$account/$application/"]);
             return $client->request($method, $uri, $requestOptions);
         } catch (BadResponseException $e) {
