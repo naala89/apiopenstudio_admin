@@ -9,10 +9,6 @@ module.exports = {
             dest: "./public/js/"
         },
         vendor_scripts: ["./includes/vendor/**/*.js"],
-        vendor_styles: ["./includes/vendor/**/*.css"],
-        images: {
-            src: ["./includes/js/src/*"],
-            dest: "./public/images/"
-        }
+        vendor_styles: ["./includes/vendor/**/*.css"]
     }
 };
