@@ -1,10 +1,4 @@
 <!-- Create account modal -->
-<script>
-  APIOPENSTUDIO.accAppMap = [];
-  {% for appid, application in applications %}
-    APIOPENSTUDIO.accAppMap[{{ appid }}] = {'accid': {{ application.accid }}, 'name': "{{ application.name }}"};
-  {% endfor %}
-</script>
 <div id="modal-user-role-create" class="modal">
   <form method="post" action="/user/role/create" id="user-role-create">
     <div class="modal-content">

@@ -1,10 +1,4 @@
 <!-- Create var modal -->
-<script>
-  APIOPENSTUDIO.accAppMap = [];
-  {% for appid, application in applications %}
-  APIOPENSTUDIO.accAppMap[{{ appid }}] = {'accid': {{ application.accid }}, 'name': "{{ application.name }}"};
-  {% endfor %}
-</script>
 <div id="modal-var-create" class="modal">
   <form method="post" action="/var/create" id="var-create">
     <div class="modal-content">

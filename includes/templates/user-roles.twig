@@ -74,12 +74,12 @@
     <div class="row hoverable">
       <div class="col col-height s2 valign-wrapper truncate"><a href="/users?keyword={{ users[user_role.uid].username }}">{{ users[user_role.uid].username }}</a></div>
       <div class="col col-height s2 valign-wrapper truncate"><a href="/users?keyword={{ users[user_role.uid].email }}">{{ users[user_role.uid].email }}</a></div>
-      <div class="col col-height s2 valign-wrapper truncate"><a href="/accounts?keyword={{ accounts[user_role.accid] }}">{{ accounts[user_role.accid].name }}</a></div>
+      <div class="col col-height s2 valign-wrapper truncate"><a href="/accounts?keyword={{ accounts[user_role.accid].name }}">{{ accounts[user_role.accid].name }}</a></div>
       <div class="col col-height s2 valign-wrapper truncate"><a href="/applications?keyword={{ applications[user_role.appid].name }}">{{ applications[user_role.appid].name }}</a> </div>
       <div class="col col-height s2 valign-wrapper truncate">{{ roles[user_role.rid] }}</div>
       <div class="col col-height s2 valign-wrapper truncate">
         <a class="btn-floating btn-small white hoverable">
-          <i class="material-icons modal-user-role-delete-trigger red" urid="{{ user_role.urid }}" user="{{ users[user_role.uid].username }}" acc="{{ accounts[user_role.accid] }}" app="{{ applications[user_role.appid].name }}" role="{{ roles[user_role.rid] }}" title="Delete this user role.">delete</i>
+          <i class="material-icons modal-user-role-delete-trigger red" urid="{{ user_role.urid }}" user="{{ users[user_role.uid].username }}" acc="{{ accounts[user_role.accid].name }}" app="{{ applications[user_role.appid].name }}" role="{{ roles[user_role.rid] }}" title="Delete this user role.">delete</i>
         </a>
       </div>
     </div>
