@@ -1,4 +1,4 @@
-@import 'variables';
+@import 'includes/variables';
 
 .aos-light-blue {
   background-color: $aos-light-blue;
@@ -28,6 +28,7 @@ body {
 footer.page-footer {
   a {
     color: $aos-dark-green;
+    text-decoration: underline;
   }
 }
 
@@ -69,10 +70,11 @@ div.truncate {
 .btn,
 .btn-floating,
 .btn:visited,
-.btn-floating:visited,
 .btn:active,
-.btn-floating:active,
 .btn:focus,
+.btn-floating,
+.btn-floating:visited,
+.btn-floating:active,
 .btn-floating:focus,
 .collapsible-header {
   background-color: $aos-dark-blue
