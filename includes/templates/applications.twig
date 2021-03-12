@@ -15,7 +15,7 @@
           <a class="btn-floating btn-large modal-trigger hoverable" href="#modal-app-create"><i class="material-icons">add</i></a>
         </div>
       {% endif %}
-      <div class="col s3">
+      <div class="col s2">
         <div class="input-field">
           <input type="text" class="validate" name="keyword" value="{{ params['keyword'] }}">
           <label for="search">Search by application name</label>
@@ -54,7 +54,7 @@
           <label for="search">Sort direction</label>
         </div>
       </div>
-      <div class="col s1">
+      <div class="col s2">
         <button class="btn" type="submit">Filter
           <i class="material-icons right">send</i>
         </button>
@@ -69,7 +69,7 @@
       </div>
     </div>
   {% else %}
-    <div class="row aos-light-blue aos-dark-blue-text">
+    <div class="row table-header">
       <h6 class="col s5 col-height valign-wrapper">Account</h6>
       <h6 class="col s5 col-height valign-wrapper">Application</h6>
       <h6 class="col s2 col-height valign-wrapper">Actions</h6>
@@ -89,11 +89,11 @@
           </div>
           <div class="col s2 col-height valign-wrapper">
             {% if application.appid > 2 and ('Administrator' in roles or 'Account manager' in roles or 'Application manager' in roles) %}
-              <a class="btn-floating btn-small white hoverable">
-                <i class="material-icons modal-app-edit-trigger aos-dark-blue" accid="{{ application.accid }}" appid="{{ application.appid }}" name="{{ application.name }}" title="Edit this application.">edit</i>
+              <a class="btn-floating btn-small hoverable">
+                <i class="material-icons modal-app-edit-trigger" accid="{{ application.accid }}" appid="{{ application.appid }}" name="{{ application.name }}" title="Edit this application.">edit</i>
               </a>
-              <a class="btn-floating btn-small white hoverable">
-                <i class="material-icons modal-app-delete-trigger red" appid="{{ application.appid }}" name="{{ application.name }}" title="Delete this application.">delete</i>
+              <a class="btn-floating btn-small delete hoverable">
+                <i class="material-icons modal-app-delete-trigger" appid="{{ application.appid }}" name="{{ application.name }}" title="Delete this application.">delete</i>
               </a>
             {% endif %}
           </div>

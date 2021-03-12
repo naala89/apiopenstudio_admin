@@ -14,17 +14,17 @@
   <div class="col s12">
     {% if pages > 0 %}
       <ul class="pagination">
-        <li class="{% if page == 1 %}disabled{% endif %}">
+        <li class="{% if page == 1 %}disabled{% else %}active{% endif %}">
           <a href="{% if page == 1 %}javascript:void(0);{% else %}{{ url }}&page={{ page - 1 }}{% endif %}">
             <i class="material-icons">chevron_left</i>
           </a>
         </li>
           {% for i in start..end %}
-            <li class="{% if page == i %}active{% endif %}">
-              <a href="{{ url }}&page={{ i }}" class="{% if page == i %}aos-dark-blue{% else %}aos-light-blue{% endif %} white-text">{{ i }}</a>
+            <li class="{% if page == i %}disabled{% else %}active{% endif %}">
+              <a href="{% if page == i %}javascript:void(0);{% else %}{{ url }}&page={{ i }}{% endif %}">{{ i }}</a>
             </li>
           {% endfor %}
-          <li class="{% if page == pages %}disabled{% endif %}">
+          <li class="{% if page == pages %}disabled{% else %}active{% endif %}">
             <a href="{% if page == pages %}javascript:void(0);{% else %}{{ url }}&page={{ page + 1 }}{% endif %}">
               <i class="material-icons">chevron_right</i>
             </a>

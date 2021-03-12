@@ -1,0 +1,28 @@
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+.col-height {
+  height: 4rem;
+}
+
+.btn-floating {
+  margin-right: 1rem;
+}
+
+.close-apiopenstudio-alert {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor:pointer;
+}
+
+div.truncate {
+  display: inherit;
+}

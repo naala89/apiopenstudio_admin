@@ -62,7 +62,7 @@
       </div>
     </form>
   </div>
-  <div class="row aos-light-blue aos-dark-blue-text">
+  <div class="row table-header">
     <div class="col col-height s2 valign-wrapper">Username</div>
     <div class="col col-height s2 valign-wrapper">Email</div>
     <div class="col col-height s2 valign-wrapper">Account</div>
@@ -78,8 +78,8 @@
       <div class="col col-height s2 valign-wrapper truncate"><a href="/applications?keyword={{ applications[user_role.appid].name }}">{{ applications[user_role.appid].name }}</a> </div>
       <div class="col col-height s2 valign-wrapper truncate">{{ roles[user_role.rid] }}</div>
       <div class="col col-height s2 valign-wrapper truncate">
-        <a class="btn-floating btn-small white hoverable">
-          <i class="material-icons modal-user-role-delete-trigger red" urid="{{ user_role.urid }}" user="{{ users[user_role.uid].username }}" acc="{{ accounts[user_role.accid].name }}" app="{{ applications[user_role.appid].name }}" role="{{ roles[user_role.rid] }}" title="Delete this user role.">delete</i>
+        <a class="btn-floating btn-small delete hoverable">
+          <i class="material-icons modal-user-role-delete-trigger" urid="{{ user_role.urid }}" user="{{ users[user_role.uid].username }}" acc="{{ accounts[user_role.accid].name }}" app="{{ applications[user_role.appid].name }}" role="{{ roles[user_role.rid] }}" title="Delete this user role.">delete</i>
         </a>
       </div>
     </div>

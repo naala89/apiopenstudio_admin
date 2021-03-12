@@ -50,16 +50,16 @@
                     <label for="order_by">Order by</label>
                 </div>
             </div>
-            <div class="col s2">
+            <div class="col s1">
                 <div class="input-field">
                     <select class="input-field" name="direction">
-                        <option value="asc"{% if params.direction == "asc" %} selected{% endif %}>Ascending</option>
-                        <option value="desc"{% if params.direction == "desc" %} selected{% endif %}>Descending</option>
+                        <option value="asc"{% if params.direction == "asc" %} selected{% endif %}>Asc</option>
+                        <option value="desc"{% if params.direction == "desc" %} selected{% endif %}>Desc</option>
                     </select>
                     <label for="direction">Direction</label>
                 </div>
             </div>
-            <div class="col s1">
+            <div class="col s2">
                 <button class="btn" type="submit">Filter
                     <i class="material-icons right">send</i>
                 </button>
@@ -67,7 +67,7 @@
         </form>
     </div>
 
-    <div class="row aos-light-blue aos-dark-blue-text">
+    <div class="row table-header">
         <h6 class="col col-height s2 valign-wrapper">Account</h6>
         <h6 class="col col-height s2 valign-wrapper">Application</h6>
         <h6 class="col col-height s2 valign-wrapper">Key</h6>
@@ -98,11 +98,11 @@
             <div class="col col-height s2 valign-wrapper">{{ var.key }}</div>
             <div class="col col-height s4 valign-wrapper">{{ (var.val|length > 100 ? var.val|slice(0, 100) ~ '…'|escape : var.val) }}</div>
             <div class="col col-height s2 valign-wrapper">
-                <a class="btn-floating btn-small white hoverable modal-trigger modal-var-edit-trigger" vid="{{ var.vid }}" appid="{{ var.appid }}" key="{{ var.key }}" val="{{ var.val }}" href="#modal-var-edit">
-                    <i class="material-icons aos-dark-blue" title="Edit this var.">edit</i>
+                <a class="btn-floating btn-small hoverable modal-trigger modal-var-edit-trigger" vid="{{ var.vid }}" appid="{{ var.appid }}" key="{{ var.key }}" val="{{ var.val }}" href="#modal-var-edit">
+                    <i class="material-icons" title="Edit this var.">edit</i>
                 </a>
-                <a class="btn-floating btn-small white hoverable modal-trigger modal-var-delete-trigger" vid="{{ var.vid }}" key="{{ var.key }}" href="#modal-var-delete">
-                    <i class="material-icons red" title="Delete this var.">delete</i>
+                <a class="btn-floating btn-small delete hoverable modal-trigger modal-var-delete-trigger" vid="{{ var.vid }}" key="{{ var.key }}" href="#modal-var-delete">
+                    <i class="material-icons" title="Delete this var.">delete</i>
                 </a>
             </div>
         </div>

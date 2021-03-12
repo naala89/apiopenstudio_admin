@@ -1,10 +1,10 @@
 <header>
     <nav>
-        <div class="nav-wrapper aos-light-blue">
+        <div class="nav-wrapper">
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="left hide-on-med-and-down">
                 <li>
-                    <a href="/" class="logo-wrapper valign-wrapper aos-dark-blue-text" >
+                    <a href="/" class="logo-wrapper valign-wrapper" >
                         <img src="/images/apiopenstudio_logo_colour.png" />
                         <span class="logo-text">ApiOpenStudio</span>
                     </a>
@@ -13,16 +13,16 @@
             <ul class="right hide-on-med-and-down">
                 {% for key,value in menu %}
                     <li>
-                        <a href="{{ value }}" class="aos-dark-blue-text">{{ key }}</a>
+                        <a href="{{ value }}">{{ key }}</a>
                     </li>
                 {% endfor %}
             </ul>
         </div>
     </nav>
-    <ul class="sidenav grey darken-3" id="mobile-demo">
+    <ul class="sidenav" id="mobile-demo">
         {% for key,value in menu %}
             <li>
-                <a href="{{ value }}" class=" white-text">{{ key }}</a>
+                <a href="{{ value }}">{{ key }}</a>
             </li>
         {% endfor %}
     </ul>

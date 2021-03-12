@@ -1,0 +1,29 @@
+nav {
+  background-color: $aos-light-silver;
+  color: $aos-blue-black;
+}
+
+.page-footer {
+  background-color: $aos-dark-silver;
+}
+
+.table-header {
+  background-color: $aos-dark-blue;
+  color: $aos-light-silver;
+}
+
+.error-message {
+  background-color: $aos-red;
+}
+
+.warning-message {
+  background-color: $aos-light-brown;
+}
+
+.info-message {
+  background-color: $aos-olive-green;
+}
+
+.row.hoverable:hover, {
+  background-color: $aos-cream;
+}

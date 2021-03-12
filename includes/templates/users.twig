@@ -49,7 +49,7 @@
     </form>
   </div>
 
-  <div class="row aos-light-blue aos-dark-blue-text">
+  <div class="row table-header">
     <h6 class="col s2 col-height valign-wrapper">Username</h6>
     <h6 class="col s2 col-height valign-wrapper">First name</h6>
     <h6 class="col s2 col-height valign-wrapper">Last name</h6>
@@ -65,14 +65,14 @@
       <div class="col s3 col-height valign-wrapper truncate">{{ user.email }}</div>
       <div class="col s1 col-height valign-wrapper truncate">{% if user.active == 0 %}False{% else %}True{% endif %}</div>
       <div class="ccol s2 col-height valign-wrapper">
-        <a class="btn-floating btn-small white hoverable" href="/user/view/{{ user.uid }}">
-          <i class="material-icons aos-dark-blue" title="View this account.">remove_red_eye</i>
+        <a class="btn-floating btn-small hoverable" href="/user/view/{{ user.uid }}">
+          <i class="material-icons" title="View this account.">remove_red_eye</i>
         </a>
-        <a class="btn-floating btn-small white hoverable" href="/user/edit/{{ user.uid }}">
-          <i class="material-icons aos-dark-blue" title="Edit this account.">edit</i>
+        <a class="btn-floating btn-small hoverable" href="/user/edit/{{ user.uid }}">
+          <i class="material-icons" title="Edit this account.">edit</i>
         </a>
-        <a class="btn-floating btn-small white hoverable" href="#">
-          <i class="material-icons modal-user-delete-trigger red" delete-user-username="{{ user.username }}" delete-user-uid="{{ user.uid }}" title="Delete this account.">delete</i>
+        <a class="btn-floating btn-small delete hoverable" href="#">
+          <i class="material-icons modal-user-delete-trigger" delete-user-username="{{ user.username }}" delete-user-uid="{{ user.uid }}" title="Delete this account.">delete</i>
         </a>
       </div>
     </div>

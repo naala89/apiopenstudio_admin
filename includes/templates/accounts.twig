@@ -13,7 +13,7 @@
           <a class="btn-floating btn-large modal-trigger hoverable" href="#modal-acc-create"><i class="material-icons">add</i></a>
         {% endif %}
       </div>
-      <div class="col s6">
+      <div class="col s5">
         <div class="input-field">
           <input type="text" class="validate" name="keyword" value="{{ keyword }}">
           <label for="keyword">Search text</label>
@@ -28,7 +28,7 @@
           <label for="direction">Direction</label>
         </div>
       </div>
-      <div class="col s1">
+      <div class="col s2">
         <button class="btn" type="submit">Filter
           <i class="material-icons right">send</i>
         </button>
@@ -36,7 +36,7 @@
     </form>
   </div>
 
-  <div class="row aos-light-blue aos-blue-text">
+  <div class="row table-header">
     <h6 class="col s10 col-height valign-wrapper">Name</h6>
     <h6 class="col s2 col-height valign-wrapper">Actions</h6>
   </div>
@@ -47,11 +47,11 @@
       </div>
       <div class="col s2 col-height valign-wrapper">
         {% if isAdmin == true and account.accid != 1 %}
-          <a class="btn-floating btn-small white hoverable">
-            <i class="material-icons modal-acc-edit-trigger aos-dark-blue" accid="{{ account.accid }}" acc-name="{{ account.name }}" title="Edit this account.">edit</i>
+          <a class="btn-floating btn-small hoverable">
+            <i class="material-icons modal-acc-edit-trigger" accid="{{ account.accid }}" acc-name="{{ account.name }}" title="Edit this account.">edit</i>
           </a>
-          <a class="btn-floating btn-small white hoverable">
-            <i class="material-icons modal-acc-delete-trigger red" accid="{{ account.accid }}" acc-name="{{ account.name }}" title="Delete this account.">delete</i>
+          <a class="btn-floating btn-small delete hoverable">
+            <i class="material-icons modal-acc-delete-trigger" accid="{{ account.accid }}" acc-name="{{ account.name }}" title="Delete this account.">delete</i>
           </a>
         {% endif %}
       </div>
