@@ -5,4 +5,6 @@ v1.0.0-beta-RC1
 - Converted gulpfile from v3 to v4.
 - renamed the namespaces.
 - Consolidated /src and /includes.
-- Reduced the number of packages in composer
+- Reduced the number of packages in composer.
+- Fixed and tidied the sass, removing specific class from the markup.
+- Fixed issue where logout was not happening at the API end.
