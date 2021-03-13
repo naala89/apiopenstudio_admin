@@ -14,7 +14,7 @@
   <div class="col s12">
     {% if pages > 0 %}
       <ul class="pagination">
-        <li class="{% if page == 1 %}disabled{% else %}active{% endif %}">
+        <li class="chevron {% if page == 1 %}disabled{% else %}active{% endif %}">
           <a href="{% if page == 1 %}javascript:void(0);{% else %}{{ url }}&page={{ page - 1 }}{% endif %}">
             <i class="material-icons">chevron_left</i>
           </a>
@@ -24,7 +24,7 @@
               <a href="{% if page == i %}javascript:void(0);{% else %}{{ url }}&page={{ i }}{% endif %}">{{ i }}</a>
             </li>
           {% endfor %}
-          <li class="{% if page == pages %}disabled{% else %}active{% endif %}">
+          <li class="chevron {% if page == pages %}disabled{% else %}active{% endif %}">
             <a href="{% if page == pages %}javascript:void(0);{% else %}{{ url }}&page={{ page + 1 }}{% endif %}">
               <i class="material-icons">chevron_right</i>
             </a>

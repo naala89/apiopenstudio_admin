@@ -19,10 +19,19 @@ nav ul a {
 
 .pagination {
   li.active {
+    background-color: $aos-blue-black;
+    a {
+      color: $aos-dark-silver;
+    }
+  }
+
+  li.active.chevron {
+    background-color: transparent;
     a {
       color: $aos-blue-black;
     }
   }
+
   li.disabled {
     a {
       color: #999;
