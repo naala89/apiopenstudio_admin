@@ -16,6 +16,20 @@ $(document).ready(function () {
   M.AutoInit()
 
   /**
+   * Set the appAccMap object.
+   * This maps applications to accounts.
+   */
+  APIOPENSTUDIO.createAppAccMap = () => {
+    APIOPENSTUDIO.appAccMap = []
+    APIOPENSTUDIO.applications.forEach(function (application, key) {
+      APIOPENSTUDIO.appAccMap[key] = {
+        accid: application.accid,
+        name: application.name
+      }
+    })
+  }
+
+  /**
    * Reset options in applications to all.
    *
    * @param string selector
@@ -25,7 +39,7 @@ $(document).ready(function () {
     const selectApp = $(selector)
     selectApp.find('option').remove()
     selectApp.append($('<option>', { value: '', text: 'Please select' }))
-    APIOPENSTUDIO.accAppMap.forEach(function (application, appid) {
+    APIOPENSTUDIO.appAccMap.forEach(function (application, appid) {
       $(selector).append($('<option>', { value: appid, text: application.name }))
     })
     selectApp.val('')
@@ -42,10 +56,10 @@ $(document).ready(function () {
    */
   APIOPENSTUDIO.setAccount = function (appid, selector) {
     const selectAcc = $(selector)
-    if (typeof APIOPENSTUDIO.accAppMap[appid] === 'undefined') {
+    if (typeof APIOPENSTUDIO.appAccMap[appid] === 'undefined') {
       selectAcc.val('')
     } else {
-      selectAcc.val(APIOPENSTUDIO.accAppMap[appid].accid)
+      selectAcc.val(APIOPENSTUDIO.appAccMap[appid].accid)
     }
     selectAcc.formSelect()
   }
@@ -62,8 +76,8 @@ $(document).ready(function () {
     const selectApp = $(selector)
     selectApp.find('option').remove()
     selectApp.append($('<option>', { value: '', text: 'Please select' }))
-    APIOPENSTUDIO.accAppMap.forEach(function (application, appid) {
-      if (accid === application.accid) {
+    APIOPENSTUDIO.appAccMap.forEach(function (application, appid) {
+      if (accid == application.accid) {
         selectApp.append($('<option>', { value: appid, text: application.name }))
       }
     })
@@ -78,4 +92,6 @@ $(document).ready(function () {
     $(this).closest('.apiopenstudio-alert').fadeOut('slow', function () {
     })
   })
+
+  APIOPENSTUDIO.createAppAccMap()
 })

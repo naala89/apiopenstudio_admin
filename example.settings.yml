@@ -10,52 +10,44 @@
 
 debug:
   formatters:
-    api_open_studio:
+    api_open_studio_admin:
       format: "%datetime%-%channel%.%level_name% - %message%\n"
   handlers:
     console:
       class: Monolog\Handler\StreamHandler
       level: DEBUG
-      formatter: api_open_studio
+      formatter: api_open_studio_admin
       processors: [memory_processor]
       bubble: true
       stream: php://stdout
-    api_file_handler:
+    admin_file_handler:
       class: Monolog\Handler\StreamHandler
-      level: DEBUG
-      formatter: api_open_studio
+      level: INFO
+      formatter: api_open_studio_admin
       bubble: true
-      stream: /var/www/html/logs/api/error.log
-    db_file_handler:
-      class: Monolog\Handler\StreamHandler
-      level: NOTICE
-      formatter: api_open_studio
-      bubble: true
-      stream: /var/www/html/logs/db/error.log
+      stream: /var/www/html/logs/apiopenstudio_admin/error.log
   processors:
     web_processor:
       class: Monolog\Processor\WebProcessor
     memory_processor:
       class: Monolog\Processor\MemoryUsageProcessor
   loggers:
-    api:
-      handlers: [api_file_handler]
+    admin:
+      handlers: [admin_file_handler]
       processors: [web_processor]
-    db:
-      handlers: [db_file_handler]
-      processors: [web_processor]
-
-api:
-  url: "api.apiopenstudio.local"
-  core_account: apiopenstudio
-  core_application: core
 
 admin:
   url: "admin.apiopenstudio.local"
+  api_url: "api.apiopenstudio.local"
+  protocols:
+    - https
+  core_account: apiopenstudio
+  core_application: core
   base_path: "/var/www/html/admin/"
+  dir_tmp: "/tmp/"
   dir_public: "public/"
   pagination_step: 20
-  admin_templates: "includes/templates/"
+  templates: "includes/templates/"
   slim:
     displayErrorDetails: true
     determineRouteBeforeAppMiddleware: true

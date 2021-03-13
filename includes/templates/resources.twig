@@ -8,7 +8,7 @@
     </div>
     <div class="row ">
         <div class="col s1">
-            <a class="btn-floating btn-large waves-effect waves-light green hoverable" href="/resource/create"
+            <a class="btn-floating btn-large hoverable" href="/resource/create"
                title="Create a resource."><i class="material-icons">add</i></a>
         </div>
         <form method="get" action="/resources">
@@ -52,17 +52,17 @@
                     <label for="search">Sort by</label>
                 </div>
             </div>
-            <div class="col s2">
+            <div class="col s1">
                 <div class="input-field">
                     <select class="input-field" name="direction">
-                        <option value="asc"{% if params.direction == "asc" %} selected{% endif %}>Ascending</option>
-                        <option value="desc"{% if params.direction == "desc" %} selected{% endif %}>Descending</option>
+                        <option value="asc"{% if params.direction == "asc" %} selected{% endif %}>Asc</option>
+                        <option value="desc"{% if params.direction == "desc" %} selected{% endif %}>Desc</option>
                     </select>
                     <label for="direction">Direction</label>
                 </div>
             </div>
-            <div class="col s1">
-                <button class="btn waves-effect waves-light" type="submit">Filter
+            <div class="col s2">
+                <button class="btn" type="submit">Filter
                     <i class="material-icons right">send</i>
                 </button>
             </div>
@@ -84,7 +84,7 @@
         </div>
     </div>
 
-    <div class="row teal lighten-1 white-text">
+    <div class="row table-header">
         <h6 class="col col-height s2 valign-wrapper">Name</h6>
         <h6 class="col col-height s2 valign-wrapper">Account</h6>
         <h6 class="col col-height s2 valign-wrapper">Application</h6>
@@ -119,15 +119,15 @@
             <div class="col col-height s2 valign-wrapper">{{ resource.method }}</div>
             <div class="col col-height s2 valign-wrapper">{{ resource.uri }}</div>
             <div class="col col-height s2 valign-wrapper">
-                <a class="btn-floating btn-small white hoverable" href="/resource/edit/{{ resource.resid }}">
+                <a class="btn-floating btn-small hoverable" href="/resource/edit/{{ resource.resid }}">
                     <i class="material-icons black-text" title="Edit this resource.">edit</i>
                 </a>
-                <a class="btn-floating btn-small white hoverable" href="#">
-                    <i class="material-icons modal-resource-download-trigger black-text" resid="{{ resource.resid }}"
+                <a class="btn-floating btn-small hoverable" href="#">
+                    <i class="material-icons modal-resource-download-trigger" resid="{{ resource.resid }}"
                        res-name="{{ resource.name }}" title="Download this resource.">file_download</i>
                 </a>
-                <a class="btn-floating btn-small white hoverable" href="#">
-                    <i class="material-icons modal-resource-delete-trigger red-text" resid="{{ resource.resid }}"
+                <a class="btn-floating btn-small delete hoverable" href="#">
+                    <i class="material-icons modal-resource-delete-trigger" resid="{{ resource.resid }}"
                        res-name="{{ resource.name }}" title="Delete this resource.">delete</i>
                 </a>
             </div>

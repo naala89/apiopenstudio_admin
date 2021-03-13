@@ -1,10 +1,4 @@
 <!-- edit var modal -->
-<script>
-  APIOPENSTUDIO.accAppMap = [];
-  {% for appid, application in applications %}
-  APIOPENSTUDIO.accAppMap[{{ appid }}] = {'accid': {{ application.accid }}, 'name': "{{ application.name }}"};
-  {% endfor %}
-</script>
 <div id="modal-var-edit" class="modal">
   <form method="post" action="/var/edit" id="var-edit">
 
@@ -24,8 +18,8 @@
 
       <div class="row">
         <div class="input-field col s4 offset-s8">
-          <a class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-          <button class="btn waves-effect waves-light" type="submit">Update</button>
+          <a class="modal-action modal-close btn-flat">Cancel</a>
+          <button class="btn" type="submit">Update</button>
         </div>
       </div>
 

@@ -8,12 +8,6 @@
 
 {% block content %}
   <script src="/js/js-yaml.min.js"></script>
-  <script>
-    APIOPENSTUDIO.accAppMap = [];
-    {% for appid, application in applications %}
-      APIOPENSTUDIO.accAppMap[{{ appid }}] = {'accid': {{ application.accid }}, 'name': "{{ application.name }}"};
-    {% endfor %}
-  </script>
   <div class="row">
     <p>{% if operation == 'create' %}Create a new resource.{% else %}Edit resource #{{ resid }}: "{{ resource.name }}".{% endif %}</p>
   </div>
@@ -37,7 +31,7 @@
       </div>
     </div>
 
-    <div class="row teal lighten-1 white-text">
+    <div class="row aos-light-blue aos-dark-blue-text">
       <div class="col col-height s8 valign-wrapper">Resource definition</div>
       <div class="col col-height s4 valign-wrapper">Functions</div>
     </div>
@@ -62,7 +56,7 @@
             <select name="accid" id="accid">
               <option value="" disabled selected>Please select</option>
               {% for account in accounts %}
-                <option value="{{ account.accid }}" {% if APIOPENSTUDIO.accAppMap[appid] is not empty %}selected{% endif %}>{{ account.name }}</option>
+                <option value="{{ account.accid }}" {% if APIOPENSTUDIO.appAccMap[appid] is not empty %}selected{% endif %}>{{ account.name }}</option>
               {% endfor %}
             </select>
             <label>Account</label>
@@ -132,7 +126,7 @@
 
         <div class="row">
           <div class="col">
-            <button class="btn waves-effect waves-light" type="submit">
+            <button class="btn" type="submit">
               Upload<i class="material-icons right">send</i>
             </button>
           </div>

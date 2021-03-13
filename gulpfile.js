@@ -8,6 +8,7 @@ const flatten = require('gulp-flatten');
 const babel = require('gulp-babel');
 const sass = require("gulp-sass");
 const eslint = require('gulp-eslint');
+const rename = require('gulp-rename');
 
 function clean_style() {
     return src(config.paths.styles.dest + '*')
@@ -18,6 +19,10 @@ function style() {
     return src(config.paths.styles.src)
         .pipe(sass())
         .pipe(minify_css())
+        .pipe(rename({
+            suffix: ".min",
+            extname: ".css"
+        }))
         .pipe(dest(config.paths.styles.dest))
 }
 
@@ -36,7 +41,7 @@ function script() {
     return src(config.paths.scripts.src)
         .pipe(eslint())
         .pipe(eslint.format())
-        .pipe(eslint.failAfterError())
+        // .pipe(eslint.failAfterError())
         .pipe(concat('apiopenstudio.min.js'))
         .pipe(babel())
         .pipe(uglify())

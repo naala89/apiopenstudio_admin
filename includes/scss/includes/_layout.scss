@@ -4,13 +4,6 @@ body {
   flex-direction: column;
 }
 
-nav .brand-logo {
-  background-image: url("/images/Krokodil-lineart.svg");
-  background-repeat: no-repeat;
-  background-size: contain;
-  padding-left: 5rem;
-}
-
 main {
   flex: 1 0 auto;
 }
@@ -23,9 +16,13 @@ main {
   margin-right: 1rem;
 }
 
-.close-apiopenstudio-alert{
+.close-apiopenstudio-alert {
   position: absolute;
   right: 10px;
   top: 10px;
   cursor:pointer;
+}
+
+div.truncate {
+  display: inherit;
 }

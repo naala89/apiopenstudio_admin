@@ -1,17 +1,17 @@
 <ul class="collapsible" data-collapsible="accordion">
     {% for menu, details in functions %}
         <li>
-            <div class="collapsible-header teal lighten-1 white-text">{{ menu }}</div>
+            <div class="collapsible-header">{{ menu }}</div>
             <div class="collapsible-body">
                 <div class="row">
                     <ul class="collapsible" data-collapsible="accordion">
                         {% for detail in details %}
                             <li>
-                                <div class="collapsible-header teal lighten-1 white-text">{{ detail.name }}</div>
+                                <div class="collapsible-header">{{ detail.name }}</div>
                                 <div class="collapsible-body">
                                     <div class="row"><b>Description:</b> {{ detail.description }}</div>
                                     <div class="row"><b>Machine name:</b> {{ detail.machineName }}</div>
-                                    <div class="row teal lighten-1 white-text">Inputs</div>
+                                    <div class="row aos-dark-blue white-text">Inputs</div>
                                     <dl>
                                         {% for key, input in detail.input %}
                                             <dt>{{ key }}</dt>

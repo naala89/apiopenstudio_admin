@@ -1,10 +1,4 @@
 <!-- Create var modal -->
-<script>
-  APIOPENSTUDIO.accAppMap = [];
-  {% for appid, application in applications %}
-  APIOPENSTUDIO.accAppMap[{{ appid }}] = {'accid': {{ application.accid }}, 'name': "{{ application.name }}"};
-  {% endfor %}
-</script>
 <div id="modal-var-create" class="modal">
   <form method="post" action="/var/create" id="var-create">
     <div class="modal-content">
@@ -54,8 +48,8 @@
 
       <div class="row">
         <div class="input-field col s4 offset-s8">
-          <a class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-          <button class="btn waves-effect waves-light" type="submit">Create</button>
+          <a class="modal-action modal-close btn-flat">Cancel</a>
+          <button class="btn" type="submit">Create</button>
         </div>
       </div>
 

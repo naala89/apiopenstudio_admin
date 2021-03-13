@@ -9,9 +9,9 @@
     <div class="row ">
         <form method="get" action="/roles">
             <div class="col s1 ">
-                <a class="btn-floating btn-large waves-effect waves-light green modal-trigger modal-role-create-trigger hoverable" href="#"><i class="material-icons">add</i></a>
+                <a class="btn-floating btn-large modal-trigger modal-role-create-trigger hoverable" href="#"><i class="material-icons">add</i></a>
             </div>
-            <div class="col s6">
+            <div class="col s5">
                 <div class="input-field">
                     <input type="text" class="validate" name="keyword" value="{{ keyword }}">
                     <label for="keyword">Search text</label>
@@ -26,15 +26,15 @@
                     <label for="direction">Direction</label>
                 </div>
             </div>
-            <div class="col s1">
-                <button class="btn waves-effect waves-light" type="submit">Filter
+            <div class="col s2">
+                <button class="btn" type="submit">Filter
                     <i class="material-icons right">send</i>
                 </button>
             </div>
         </form>
     </div>
 
-    <div class="row teal lighten-1 white-text">
+    <div class="row table-header">
         <h6 class="col col-height s10 valign-wrapper">Name</h6>
         <h6 class="col col-height s2 valign-wrapper">Actions</h6>
     </div>
@@ -43,11 +43,11 @@
             <div class="col col-height s10 valign-wrapper">{{ role.name }}</a></div>
             <div class="col col-height s2 valign-wrapper">
                 {% if accid != 1 %}
-                    <a class="btn-floating btn-small white hoverable">
-                        <i class="material-icons modal-role-edit-trigger black-text" rid="{{ role.rid }}" role-name="{{ role.name }}" title="Edit this role.">edit</i>
+                    <a class="btn-floating btn-small hoverable">
+                        <i class="material-icons modal-role-edit-trigger" rid="{{ role.rid }}" role-name="{{ role.name }}" title="Edit this role.">edit</i>
                     </a>
-                    <a class="btn-floating btn-small white hoverable">
-                        <i class="material-icons modal-role-delete-trigger black-text" rid="{{ role.rid }}" role-name="{{ role.name }}" title="Delete this role.">delete</i>
+                    <a class="btn-floating btn-small delete hoverable">
+                        <i class="material-icons modal-role-delete-trigger" rid="{{ role.rid }}" role-name="{{ role.name }}" title="Delete this role.">delete</i>
                     </a>
                 {% endif %}
             </div>

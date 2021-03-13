@@ -18,7 +18,7 @@
   <form method="post" action="/user/upload">
     <input type="hidden" name="uid" value="{{ user.uid }}">
     <div class="row">
-      <div class="col s6">
+      <div class="col s12 m5 l6">
         <div class="input-field col s12">
           <select id="active" name="active" class="validate" required>
             <option value="false" {% if user.active is not empty and user.active == 0 %}selected{% endif %}>False</option>
@@ -68,7 +68,7 @@
           <label for="company">Website</label>
         </div>
       </div>
-      <div class="col s6">
+      <div class="col s12 m5 l6">
         <div class="input-field col s12">
           <input type="text" name="address_street" value="{{ user.addressStreet }}">
           <label for="address_street">Street</label>
@@ -105,7 +105,7 @@
     </div>
     <div class="row">
       <div class="input-field col s12">
-        <button type='submit' class='btn-small waves-green white-text waves-effect z-depth-1 y-depth-1'>
+        <button type='submit' class='btn btn-small z-depth-1 y-depth-1'>
           {% if user.uid is not empty %}Update{% else %}Create{% endif %}<i class="material-icons right">send</i>
         </button>
       </div>

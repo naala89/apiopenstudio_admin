@@ -1,0 +1,84 @@
+.logo-wrapper {
+  color: $logo-dark-blue;
+
+  img {
+    height: 3rem;
+    width: auto;
+  }
+
+  .logo-text {
+    font-family: 'Maven Pro', sans-serif;
+    font-size: 1.5rem;
+  }
+}
+
+nav ul a {
+  color: $aos-blue-black;
+  text-decoration: none;
+}
+
+.pagination {
+  li.active {
+    background-color: $aos-blue-black;
+    a {
+      color: $aos-dark-silver;
+    }
+  }
+
+  li.active.chevron {
+    background-color: transparent;
+    a {
+      color: $aos-blue-black;
+    }
+  }
+
+  li.disabled {
+    a {
+      color: #999;
+    }
+  }
+}
+
+footer.page-footer {
+  color: $aos-blue-black;
+}
+
+a {
+  color: $aos-dark-blue;
+  text-decoration: underline;
+}
+
+.btn,
+.btn-floating,
+.btn-floating i,
+.btn:visited,
+.btn:active,
+.btn:focus,
+.btn-floating,
+.btn-floating:visited,
+.btn-floating:active,
+.btn-floating:focus,
+.collapsible-header {
+  background-color: $aos-blue-black;
+  color: $aos-dark-silver;
+}
+
+.btn:hover,
+.btn-floating:hover,
+.btn-floating i:hover {
+  background-color: $aos-light-blue;
+  color: $aos-light-silver;
+}
+
+.delete i {
+  background-color: $aos-red;
+}
+
+.delete i:hover {
+  background-color: red;
+}
+
+.collapsible-header {
+  color: white;
+}
+
