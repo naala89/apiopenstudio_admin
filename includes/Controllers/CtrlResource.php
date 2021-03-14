@@ -68,10 +68,9 @@ class CtrlResource extends CtrlBase
         }
 
         $menu = $this->getMenus();
+
+        // Params for the REST call.
         $allParams = $request->getParams();
-        if (!empty($allParams['filter_by_application'])) {
-            $allParams['filter_by_account'] = '';
-        }
         $allParams['order_by'] = empty($allParams['order_by']) ? 'name' : $allParams['order_by'];
 
         $query = [];
@@ -92,6 +91,7 @@ class CtrlResource extends CtrlBase
             $query['direction'] = $allParams['direction'];
         }
 
+        // Fetch the resources.
         $resources = [];
         try {
             $result = $this->apiCall(
@@ -109,61 +109,11 @@ class CtrlResource extends CtrlBase
             $this->flash->addMessageNow('error', $e->getMessage());
         }
 
-        // Filter by account.
-        if (!empty($allParams['filter_by_account'])) {
-            $filterApps = [];
-            foreach ($this->userAccounts as $userAccount) {
-                if ($userAccount['accid'] == $allParams['filter_by_account']) {
-                    foreach ($this->userApplications as $userApplication) {
-                        if ($userApplication['accid'] == $userAccount['accid']) {
-                            $filterApps[] = $userApplication['appid'];
-                        }
-                    }
-                }
-            }
-            foreach ($resources as $index => $resource) {
-                if (!in_array($resource['appid'], $filterApps)) {
-                    unset($resources[$index]);
-                }
-            }
-        }
-
-        $sortedResources = [];
-        if ($allParams['order_by'] == 'account') {
-            // Sort by account name.
-            foreach ($this->userAccounts as $userAccount) {
-                foreach ($this->userApplications as $userApplication) {
-                    foreach ($resources as $index => $resource) {
-                        if (
-                            $userAccount['accid'] == $userApplication['accid']
-                                && $userApplication['appid'] == $resource['appid']
-                        ) {
-                            $sortedResources[] = $resource;
-                            unset($resources[$index]);
-                        }
-                    }
-                }
-            }
-        } elseif ($allParams['order_by'] == 'application') {
-            // Sort by application name.
-            foreach ($this->userApplications as $userApplication) {
-                foreach ($resources as $index => $resource) {
-                    if ($userApplication['appid'] == $resource['appid']) {
-                        $sortedResources[] = $resource;
-                        unset($resources[$index]);
-                    }
-                }
-            }
-        } else {
-            // All other sorts.
-            $sortedResources = $resources;
-        }
-
         // Pagination.
         $page = isset($allParams['page']) ? $allParams['page'] : 1;
-        $pages = ceil(count($sortedResources) / $this->settings['admin']['pagination_step']);
+        $pages = ceil(count($resources) / $this->settings['admin']['pagination_step']);
         $sortedResources = array_slice(
-            $sortedResources,
+            $resources,
             ($page - 1) * $this->settings['admin']['pagination_step'],
             $this->settings['admin']['pagination_step'],
             true
@@ -172,7 +122,7 @@ class CtrlResource extends CtrlBase
         return $this->view->render($response, 'resources.twig', [
             'menu' => $menu,
             'params' => $allParams,
-            'resources' => $sortedResources,
+            'resources' => $resources,
             'page' => $page,
             'pages' => $pages,
             'accounts' => $this->userAccounts,

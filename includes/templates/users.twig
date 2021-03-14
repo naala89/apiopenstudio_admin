@@ -59,12 +59,12 @@
   </div>
   {% for uid, user in users %}
     <div class="row hoverable">
-      <div class="col s2 col-height valign-wrapper truncate">{{ user.username }}</div>
-      <div class="col s2 col-height valign-wrapper truncate">{{ user.nameFirst }}</div>
-      <div class="col s2 col-height valign-wrapper truncate">{{ user.nameLast }}</div>
-      <div class="col s3 col-height valign-wrapper truncate">{{ user.email }}</div>
-      <div class="col s1 col-height valign-wrapper truncate">{% if user.active == 0 %}False{% else %}True{% endif %}</div>
-      <div class="ccol s2 col-height valign-wrapper">
+      <div class="col s2 col-height valign-wrapper overflow-hidden">{{ user.username }}</div>
+      <div class="col s2 col-height valign-wrapper overflow-hiddenp">{{ user.nameFirst }}</div>
+      <div class="col s2 col-height valign-wrapper overflow-hidden">{{ user.nameLast }}</div>
+      <div class="col s3 col-height valign-wrapper overflow-hidden">{{ user.email }}</div>
+      <div class="col s1 col-height valign-wrapper">{% if user.active == 0 %}False{% else %}True{% endif %}</div>
+      <div class="col s2 col-height valign-wrapper">
         <a class="btn-floating btn-small hoverable" href="/user/view/{{ user.uid }}">
           <i class="material-icons" title="View this account.">remove_red_eye</i>
         </a>

@@ -26,3 +26,11 @@ main {
 div.truncate {
   display: inherit;
 }
+
+.word-wrap {
+  word-wrap: break-word;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
