@@ -16,7 +16,7 @@
           <select class="input-field" name="uid">
             <option value="">All</option>
             {% for uid, user in users %}
-              <option value="{{ uid }}">{{ user.username }}</option>
+              <option value="{{ uid }}" {% if uid == params.uid %}selected{% endif %}>{{ user.username }}</option>
             {% endfor %}
           </select>
           <label for="uid">Username</label>
@@ -72,12 +72,12 @@
   </div>
   {% for user_role in user_roles %}
     <div class="row hoverable">
-      <div class="col col-height s2 valign-wrapper truncate"><a href="/users?keyword={{ users[user_role.uid].username }}">{{ users[user_role.uid].username }}</a></div>
-      <div class="col col-height s2 valign-wrapper truncate"><a href="/users?keyword={{ users[user_role.uid].email }}">{{ users[user_role.uid].email }}</a></div>
-      <div class="col col-height s2 valign-wrapper truncate"><a href="/accounts?keyword={{ accounts[user_role.accid].name }}">{{ accounts[user_role.accid].name }}</a></div>
-      <div class="col col-height s2 valign-wrapper truncate"><a href="/applications?keyword={{ applications[user_role.appid].name }}">{{ applications[user_role.appid].name }}</a> </div>
-      <div class="col col-height s2 valign-wrapper truncate">{{ roles[user_role.rid] }}</div>
-      <div class="col col-height s2 valign-wrapper truncate">
+      <div class="col col-height s2 valign-wrapper overflow-hidden"><a href="/users?keyword={{ users[user_role.uid].username }}">{{ users[user_role.uid].username }}</a></div>
+      <div class="col col-height s2 valign-wrapper overflow-hidden"><a href="/users?keyword={{ users[user_role.uid].email }}">{{ users[user_role.uid].email }}</a></div>
+      <div class="col col-height s2 valign-wrapper overflow-hidden"><a href="/accounts?keyword={{ accounts[user_role.accid].name }}">{{ accounts[user_role.accid].name }}</a></div>
+      <div class="col col-height s2 valign-wrapper overflow-hidden"><a href="/applications?keyword={{ applications[user_role.appid].name }}">{{ applications[user_role.appid].name }}</a> </div>
+      <div class="col col-height s2 valign-wrapper overflow-hidden">{{ roles[user_role.rid] }}</div>
+      <div class="col col-height s2 valign-wrapper">
         <a class="btn-floating btn-small delete hoverable">
           <i class="material-icons modal-user-role-delete-trigger" urid="{{ user_role.urid }}" user="{{ users[user_role.uid].username }}" acc="{{ accounts[user_role.accid].name }}" app="{{ applications[user_role.appid].name }}" role="{{ roles[user_role.rid] }}" title="Delete this user role.">delete</i>
         </a>
