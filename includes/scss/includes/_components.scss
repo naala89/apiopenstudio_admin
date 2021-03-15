@@ -70,10 +70,12 @@ a {
   color: $aos-light-silver;
 }
 
+.btn.delete,
 .delete i {
   background-color: $aos-red;
 }
 
+.btn.delete:hover,
 .delete i:hover {
   background-color: red;
 }
