@@ -25,11 +25,14 @@ stages:
 phpcs:
   image: php:7.4
   stage: lint
+  only:
+    - develop
+    - master
+    - merge_requests
   artifacts:
     when: on_failure
     paths:
       - phpcs.txt
-      - eslint.txt
   script:
     - apt-get update
     - apt-get install -y libzip-dev openssh-client rsync libxslt-dev unzip
@@ -48,6 +51,14 @@ phpcs:
 eslint:
   image: node
   stage: lint
+  only:
+    - develop
+    - master
+    - merge_requests
+  artifacts:
+    when: on_failure
+    paths:
+      - eslint.txt
   script:
     - npm i eslint
     - node_modules/eslint/bin/eslint.js -o ./eslint.txt includes/js/*.js
