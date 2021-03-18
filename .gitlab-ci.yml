@@ -47,4 +47,4 @@ phpcs:
   script:
     - echo "Linting the codebase."
     - ./vendor/bin/phpcs --standard=PSR12 --report-file=phpcs.txt --ignore=*.min.js,*.min.css includes/*.php public/*.php
-    - eslint -o ./eslint.txt includes/js/*.js
+#    - eslint -o ./eslint.txt includes/js/*.js
