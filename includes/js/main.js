@@ -77,6 +77,7 @@ $(document).ready(function () {
     selectApp.find('option').remove()
     selectApp.append($('<option>', { value: '', text: 'Please select' }))
     APIOPENSTUDIO.appAccMap.forEach(function (application, appid) {
+      /* eslint-disable eqeqeq */
       if (accid == application.accid) {
         selectApp.append($('<option>', { value: appid, text: application.name }))
       }

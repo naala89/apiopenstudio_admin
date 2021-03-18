@@ -41,7 +41,7 @@ function script() {
     return src(config.paths.scripts.src)
         .pipe(eslint())
         .pipe(eslint.format())
-        // .pipe(eslint.failAfterError())
+        .pipe(eslint.failAfterError())
         .pipe(concat('apiopenstudio.min.js'))
         .pipe(babel())
         .pipe(uglify())
