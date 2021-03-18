@@ -1,0 +1,53 @@
+# GitLab pipelines definition.
+#
+# @package   ApiOpenStudioAdmin
+# @license   This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+#            If a copy of the MPL was not distributed with this file,
+#            You can obtain one at https://mozilla.org/MPL/2.0/.
+# @author    john89 (https://gitlab.com/john89)
+# @copyright 2020-2030 ApiOpenStudio
+# @link      https://www.apiopenstudio.com
+
+#cache:
+#  key: "$CI_COMMIT_REF_SLUG"
+#  paths:
+#    - vendor/
+#    - .composer/
+#    - composer.lock
+
+stages:
+  - lint
+
+##################################
+## LINTING
+##################################
+
+phpcs:
+  image: php:7.4
+  stage: lint
+  artifacts:
+    when: on_failure
+    paths:
+      - phpcs.txt
+      - eslint.txt
+  script:
+    - apt-get update
+    - apt-get install -y libzip-dev openssh-client rsync libxslt-dev unzip
+    - docker-php-ext-install zip xsl
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    - php composer-setup.php
+    - php -r "unlink('composer-setup.php');"
+    - php composer.phar install
+    - echo "Linting the codebase."
+    - ./vendor/bin/phpcs --standard=PSR12 --report-file=phpcs.txt --ignore=*.min.js,*.min.css includes/*.php public/*.php
+
+eslint:
+  image: node
+  stage: lint
+  script:
+    - npm i eslint
+    - node_modules/eslint/bin/eslint.js -o ./eslint.txt includes/js/*.js

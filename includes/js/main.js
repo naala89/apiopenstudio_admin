@@ -1,7 +1,7 @@
 /**
  * Generic JS for the admin pages.
  *
- * @package   Apiopenstudio
+ * @package   ApiOpenStudioAdmin
  * @license   This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *            If a copy of the MPL was not distributed with this file,
  *            You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -77,6 +77,7 @@ $(document).ready(function () {
     selectApp.find('option').remove()
     selectApp.append($('<option>', { value: '', text: 'Please select' }))
     APIOPENSTUDIO.appAccMap.forEach(function (application, appid) {
+      /* eslint-disable eqeqeq */
       if (accid == application.accid) {
         selectApp.append($('<option>', { value: appid, text: application.name }))
       }
