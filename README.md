@@ -13,7 +13,7 @@ This codebase is an add-on to [ApiOpenStudio][api_open_studio] provides a GUI to
 completely manage your API, users, roles, resources, etc.
 
 More are planned, to allow more choices of GUI and single-page applications, and
-give the community a more choice.
+give the community more choice.
 
 Installation
 ============
