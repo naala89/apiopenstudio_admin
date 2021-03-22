@@ -20,13 +20,17 @@ Installation
 
 It assumed that you already have ApiOpenStudio up and running.
 
-The quickest way to install ApiOpenStudio is to create a project with composer:
+The quickest way to install ApiOpenStudio Admin is to create a project with composer:
 
-    composer create-project apiopenstudio/apiopenstudio
+    composer create-project apiopenstudio/apiopenstudio_admin:1.0.0-alpha
 
-Or checkout the repository:
+Or checkout the repository [GitHub mirror][admin_github]:
 
-    git clone https://github.com/naala89/api_open_studio
+    git clone https://github.com/naala89/api_open_studio_admin
+
+Or checkout the main repository [GitLab][admin_gitlab]:
+
+    git clone https://gitlab.com/john89/api_open_studio_admin
 
 Serve ApiOpenStudio and admin
 through [api_open_studio_docker][api_open_studio_docker] or on a server
@@ -299,6 +303,10 @@ get something similar to:
 [mpl_2.0_logo]: https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg
 
 [mpl_2.0]: https://opensource.org/licenses/MPL-2.0
+
+[admin_github]: https://github.com/naala89/api_open_studio_admin
+
+[admin_gitlab]: https://gitlab.com/john89/api_open_studio_admin
 
 [api_open_studio]: https://github.com/naala89/api_open_studio
 
