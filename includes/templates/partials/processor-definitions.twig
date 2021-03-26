@@ -1,5 +1,5 @@
 <ul class="collapsible" data-collapsible="accordion">
-    {% for menu, details in functions %}
+    {% for menu, details in processors %}
         <li>
             <div class="collapsible-header">{{ menu }}</div>
             <div class="collapsible-body">
@@ -21,12 +21,12 @@
                                                     <li><b>Cardinality:</b> {{ input.cardinality[0] }} : {{ input.cardinality[1] }}</li>
                                                     <li><b>Literal allowed:</b> {% if input.literalAllowed %}True{% else %}False{% endif %}</li>
                                                     <li>
-                                                        <b>Functions allowed: </b>
-                                                        {% if input.limitFunctions is empty %}
+                                                        <b>Processors allowed: </b>
+                                                        {% if input.limitProcessors is empty %}
                                                             All
                                                         {% else %}
-                                                            {% for limit_function in input.limitFunctions %}
-                                                                {{ limit_function }}
+                                                            {% for limit_processor in input.limitProcessors %}
+                                                                {{ limit_processor }}
                                                                 {% if not loop.last %}, {% endif %}
                                                             {% endfor %}
                                                         {% endif %}
