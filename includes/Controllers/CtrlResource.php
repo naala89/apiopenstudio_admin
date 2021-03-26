@@ -150,26 +150,7 @@ class CtrlResource extends CtrlBase
 
         $menu = $this->getMenus();
 
-        try {
-            $result = $this->apiCall(
-                'get',
-                'functions/all',
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                        'Accept' => 'application/json',
-                    ],
-                ]
-            );
-            $functions = json_decode($result->getBody()->getContents(), true);
-        } catch (\Exception $e) {
-            $this->flash->addMessageNow('error', $e->getMessage());
-        }
-
-        $sortedFunctions = [];
-        foreach ($functions as $function) {
-            $sortedFunctions[$function['menu']][] = $function;
-        }
+        $processors = $this->processorDetails();
 
         return $this->view->render($response, 'resource.twig', [
             'operation' => 'create',
@@ -179,7 +160,7 @@ class CtrlResource extends CtrlBase
             'format' => $args['format'],
             'resource' => !empty($args['resource']) ? $args['resource'] : '',
             'resid' => '',
-            'functions' => $sortedFunctions,
+            'processors' => $processors,
             'messages' => $this->flash->getMessages(),
         ]);
     }
@@ -232,25 +213,7 @@ class CtrlResource extends CtrlBase
 
         $accounts = $this->userAccounts;
         $applications = $this->userApplications;
-        try {
-            $result = $this->apiCall(
-                'get',
-                'functions/all',
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                        'Accept' => 'application/json',
-                    ],
-                ]
-            );
-            $functions = json_decode($result->getBody()->getContents(), true);
-        } catch (\Exception $e) {
-            $this->flash->addMessageNow('error', $e->getMessage());
-        }
-        $sortedFunctions = [];
-        foreach ($functions as $function) {
-            $sortedFunctions[$function['menu']][] = $function;
-        }
+        $processors = $this->processorDetails();
 
         $obj = json_decode($resource['meta'], true);
         $resource['meta'] = [];
@@ -265,7 +228,7 @@ class CtrlResource extends CtrlBase
             'accounts' => $accounts,
             'applications' => $applications,
             'resource' => !empty($args['resource']) ? $args['resource'] : $resource,
-            'functions' => $sortedFunctions,
+            'processors' => $processors,
             'messages' => $this->flash->getMessages(),
             'resid' => $resid,
         ]);
@@ -585,5 +548,36 @@ class CtrlResource extends CtrlBase
             $arr['resid'] = $allPostVars['resid'];
         }
         return $arr;
+    }
+
+    /**
+     * Fetch details of all available processors.
+     *
+     * @return array Processors and their details.
+     */
+    protected function processorDetails() {
+        $processors = [];
+        try {
+            $result = $this->apiCall(
+                'get',
+                'processors/all',
+                [
+                    'headers' => [
+                        'Authorization' => "Bearer " . $_SESSION['token'],
+                        'Accept' => 'application/json',
+                    ],
+                ]
+            );
+            $processors = json_decode($result->getBody()->getContents(), true);
+        } catch (\Exception $e) {
+            $this->flash->addMessageNow('error', $e->getMessage());
+        }
+
+        $sortedProcessors = [];
+        foreach ($processors as $processor) {
+            $sortedProcessors[$processor['menu']][] = $processor;
+        }
+
+        return $sortedProcessors;
     }
 }
