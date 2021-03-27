@@ -26,8 +26,7 @@ phpcs:
   image: php:7.4
   stage: lint
   only:
-    - develop
-    - master
+    - merge_request
   artifacts:
     when: on_failure
     paths:
@@ -51,8 +50,7 @@ eslint:
   image: node
   stage: lint
   only:
-    - develop
-    - master
+    - merge_request
   artifacts:
     when: on_failure
     paths:

@@ -13,6 +13,20 @@ please follow it in all your interactions with the project.
 
 For more detailed notes of the contributing process, please visit [Contributing][contributing]
 
+Request access
+--------------
+
+To be able to contribute to the ApiOpenStudio project, you need
+to ```Request Access```.
+
+Visit the [GitLab][gitlab] home page, and click on the ```Request Access```
+link:
+
+![Request Access screenshot][request_access_screenshot]
+
+The maintainer will review and grant you access. You will then be able to
+create, edit and assign tickets, and create merge requests.
+
 Merge Request Process
 ---------------------
 
