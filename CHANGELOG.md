@@ -24,3 +24,8 @@ v1.0.0-alpha2
 
 - Updated the create/edit resource page to work with the changes in
   ApiOpenStudio (see issue #54 in ApiOpenStudio GitLab repo).
+
+v1.0.0-beta1 (in progress)
+==========================
+
+- Updated notes for contributing
