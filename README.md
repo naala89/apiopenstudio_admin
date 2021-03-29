@@ -1,6 +1,6 @@
 # ![ApiOpenStudio][api_open_studio_logo]
 
-[![License: MPL 2.0][mpl_2.0_logo]][mpl_2.0]
+[![ApiOpenStudio Public License][license_logo]][license]
 
 Introduction
 ============
@@ -300,9 +300,9 @@ get something similar to:
 
 [api_open_studio_logo]: public/images/ApiOpenStudio_Logo_Name_Colour.png
 
-[mpl_2.0_logo]: https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg
+[license_logo]: https://badgen.net/badge/License/ApiOpenStudio%20Public%20License/green?icon=gitlab
 
-[mpl_2.0]: https://opensource.org/licenses/MPL-2.0
+[license]: https://www.apiopenstudio.com/license/
 
 [admin_github]: https://github.com/naala89/api_open_studio_admin
 
