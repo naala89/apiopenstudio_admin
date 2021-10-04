@@ -46,15 +46,15 @@ phpcs:
     - echo "Linting the codebase."
     - ./vendor/bin/phpcs --standard=PSR12 --report-file=phpcs.txt --ignore=*.min.js,*.min.css includes/*.php public/*.php
 
-eslint:
-  image: node
-  stage: lint
-  only:
-    - merge_request
-  artifacts:
-    when: on_failure
-    paths:
-      - eslint.txt
-  script:
-    - npm i eslint
-    - node_modules/eslint/bin/eslint.js -o ./eslint.txt includes/js/*.js
+#eslint:
+#  image: node
+#  stage: lint
+#  only:
+#    - merge_request
+#  artifacts:
+#    when: on_failure
+#    paths:
+#      - eslint.txt
+#  script:
+#    - npm i eslint
+#    - node_modules/eslint/bin/eslint.js -o ./eslint.txt includes/js/*.js
