@@ -34,7 +34,7 @@ class CtrlVars extends CtrlBase
      *
      * @var array
      */
-    protected $permittedRoles = [
+    protected array $permittedRoles = [
         'Application manager',
         'Developer',
     ];
@@ -170,7 +170,7 @@ class CtrlVars extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function create(Request $request, Response $response, array $args)
+    public function create(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -199,11 +199,7 @@ class CtrlVars extends CtrlBase
                 ],
                 'form_params' => $params,
             ]);
-            if (json_decode($result->getBody()->getContents() == 'true')) {
-                $this->flash->addMessageNow('info', 'Var successfully created.');
-            } else {
-                $this->flash->addMessageNow('error', 'Var not created, please check the logs.');
-            }
+            $this->flash->addMessageNow('info', 'Var successfully created.');
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
@@ -220,7 +216,7 @@ class CtrlVars extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function update(Request $request, Response $response, array $args)
+    public function update(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -246,11 +242,7 @@ class CtrlVars extends CtrlBase
                 ],
                 'body' => $params['val'],
             ]);
-            if (json_decode($result->getBody()->getContents() == 'true')) {
-                $this->flash->addMessageNow('info', 'Var successfully updated.');
-            } else {
-                $this->flash->addMessageNow('error', 'Var not updated, please check the logs.');
-            }
+            $this->flash->addMessageNow('info', 'Var successfully updated.');
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
@@ -267,7 +259,7 @@ class CtrlVars extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function delete(Request $request, Response $response, array $args)
+    public function delete(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -291,7 +283,7 @@ class CtrlVars extends CtrlBase
                     'Accept' => 'application/json',
                 ],
             ]);
-            if (json_decode($result->getBody()->getContents() == 'true')) {
+            if (json_decode($result->getBody()->getContents()) == 'true') {
                 $this->flash->addMessageNow('info', 'Var successfully deleted.');
             } else {
                 $this->flash->addMessageNow('error', 'Var not deleted, please check the logs.');
