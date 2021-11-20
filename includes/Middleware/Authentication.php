@@ -89,7 +89,7 @@ class Authentication
         if (!empty($username) || !empty($password)) {
             // This is a login attempt.
             try {
-                $result = $client->request('POST', "login", [
+                $result = $client->request('POST', "auth/token", [
                     'form_params' => [
                         'username' => $username,
                         'password' => $password,
