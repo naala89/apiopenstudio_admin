@@ -32,7 +32,7 @@ class CtrlUsers extends CtrlBase
      *
      * @var array
      */
-    protected $permittedRoles = [
+    protected array $permittedRoles = [
         'Administrator',
         'Account manager',
         'Application manager',

@@ -33,7 +33,7 @@ class CtrlRole extends CtrlBase
      *
      * @var array
      */
-    protected $permittedRoles = [
+    protected array $permittedRoles = [
         'Administrator',
         'Account manager',
         'Application manager',
@@ -127,7 +127,7 @@ class CtrlRole extends CtrlBase
         $name = !empty($allParams['name']) ? $allParams['name'] : '';
 
         try {
-            $result = $this->apiCall(
+            $this->apiCall(
                 'post',
                 "role",
                 [
@@ -138,12 +138,7 @@ class CtrlRole extends CtrlBase
                     'form_params' => ['name' => $name],
                 ]
             );
-            $success = json_decode($result->getBody()->getContents(), true);
-            if ($success == 'true') {
-                $this->flash->addMessageNow('info', 'Role successfully created.');
-            } else {
-                $this->flash->addMessageNow('error', 'Role creation failed, please check the logs.');
-            }
+            $this->flash->addMessageNow('info', "Role successfully $name created.");
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
@@ -173,8 +168,7 @@ class CtrlRole extends CtrlBase
         $name = !empty($allParams['name']) ? $allParams['name'] : '';
         $rid = !empty($allParams['rid']) ? $allParams['rid'] : '';
 
-        try {
-            $result = $this->apiCall(
+        try {$this->apiCall(
                 'put',
                 'role',
                 [
@@ -185,12 +179,7 @@ class CtrlRole extends CtrlBase
                     'json' => ['rid' => $rid, 'name' => $name],
                 ]
             );
-            $success = json_decode($result->getBody()->getContents(), true);
-            if ($success == 'true') {
-                $this->flash->addMessageNow('info', 'Role successfully updated.');
-            } else {
-                $this->flash->addMessageNow('error', 'Role update failed, please check the logs.');
-            }
+            $this->flash->addMessageNow('info', "Role successfully updated to $name.");
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }

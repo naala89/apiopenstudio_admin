@@ -33,7 +33,7 @@ class CtrlUser extends CtrlBase
      *
      * @var array
      */
-    protected $permittedRoles = [];
+    protected array $permittedRoles = [];
 
     /**
      * Create a new user.
@@ -44,7 +44,7 @@ class CtrlUser extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function create(Request $request, Response $response, array $args)
+    public function create(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -68,7 +68,7 @@ class CtrlUser extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function view(Request $request, Response $response, array $args)
+    public function view(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -83,14 +83,11 @@ class CtrlUser extends CtrlBase
         try {
             $result = $this->apiCall(
                 'get',
-                'user',
+                "user/$uid",
                 [
                     'headers' => [
                         'Authorization' => "Bearer " . $_SESSION['token'],
                         'Accept' => 'application/json',
-                    ],
-                    'query' => [
-                        'uid' => $uid,
                     ],
                 ]
             );
@@ -116,7 +113,7 @@ class CtrlUser extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function edit(Request $request, Response $response, array $args)
+    public function edit(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -163,7 +160,7 @@ class CtrlUser extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function upload(Request $request, Response $response, array $args)
+    public function upload(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -201,14 +198,6 @@ class CtrlUser extends CtrlBase
                     ]
                 );
                 $this->flash->addMessageNow('info', 'User updated.');
-
-                $user = json_decode($result->getBody()->getContents(), true);
-
-                return $this->view->render($response, 'user-view.twig', [
-                    'menu' => $menu,
-                    'user' => $user,
-                    'messages' => $this->flash->getMessages(),
-                ]);
             } catch (\Exception $e) {
                 $this->flash->addMessageNow('error', $e->getMessage());
                 $user = $allPostVars;
@@ -222,7 +211,7 @@ class CtrlUser extends CtrlBase
         } else {
             // Create a user.
             try {
-                $result = $this->apiCall(
+                $this->apiCall(
                     'post',
                     'user',
                     [
@@ -277,7 +266,7 @@ class CtrlUser extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function delete(Request $request, Response $response, array $args)
+    public function delete(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {

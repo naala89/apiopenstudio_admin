@@ -57,16 +57,6 @@ class CtrlLogin extends CtrlBase
      */
     public function logout(Request $request, Response $response, array $args)
     {
-        try {
-            $this->apiCall('post', 'logout', [
-                'headers' => [
-                    'Authorization' => "Bearer " . $_SESSION['token'],
-                    'Accept' => 'application/json',
-                ],
-            ]);
-        } catch (\Exception $e) {
-            $this->flash->addMessageNow('error', $e->getMessage());
-        }
         unset($_SESSION['token']);
         unset($_SESSION['uid']);
         unset($_SESSION['username']);
