@@ -15,6 +15,11 @@ completely manage your API, users, roles, resources, etc.
 More are planned, to allow more choices of GUI and single-page applications, and
 give the community more choice.
 
+Requirements
+============
+
+The ```package.json``` file will need node:13 to install the ```npm``` dependencies.
+
 Installation
 ============
 
@@ -77,8 +82,8 @@ Requirements
 
 You will need:
 
-* Postman (<a href="https://www.postman.com/downloads/" target="_blank">
-  Download</a>) or similar REST client.
+* Postman (<a href="https://www.postman.com/downloads/" target="_blank">Download</a>)
+  or similar REST client to view results from your 'hello world' resource.
 
 Create a new account
 --------------------
