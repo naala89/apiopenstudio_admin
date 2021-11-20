@@ -33,7 +33,7 @@ class CtrlInvite extends CtrlBase
      *
      * @var array Roles permitted to view these pages.
      */
-    protected $permittedRoles = [
+    protected array $permittedRoles = [
         'Administrator',
         'Account manager',
         'Application manager',

@@ -17,6 +17,7 @@
 
 namespace ApiOpenStudioAdmin\Controllers;
 
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -33,7 +34,7 @@ class CtrlUserRole extends CtrlBase
      *
      * @var array Roles permitted to view these pages.
      */
-    protected $permittedRoles = [
+    protected array $permittedRoles = [
         'Administrator',
         'Account manager',
         'Application manager',
@@ -73,7 +74,7 @@ class CtrlUserRole extends CtrlBase
                 'headers' => ['Authorization' => "Bearer $token"],
             ]);
             $users = json_decode($result->getBody()->getContents(), true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
             return $this->view->render($response, 'user-roles.twig', [
                 'menu' => $menu,
@@ -135,7 +136,8 @@ class CtrlUserRole extends CtrlBase
                     'rid' => $allPostVars['rid'],
                 ],
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+
             $result = $e->getResponse();
             $this->flash->addMessage('error', $this->getErrorMessage($e));
             switch ($result->getStatusCode()) {
@@ -184,7 +186,7 @@ class CtrlUserRole extends CtrlBase
                     'Authorization' => "Bearer $token",
                 ],
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $result = $e->getResponse();
             $this->flash->addMessage('error', $this->getErrorMessage($e));
             switch ($result->getStatusCode()) {
