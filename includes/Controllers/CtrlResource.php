@@ -35,7 +35,7 @@ class CtrlResource extends CtrlBase
      *
      * @var array Roles permitted to view these pages.
      */
-    protected $permittedRoles = [
+    protected array $permittedRoles = [
         'Developer',
     ];
 
@@ -59,7 +59,7 @@ class CtrlResource extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function index(Request $request, Response $response, array $args)
+    public function index(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -140,7 +140,7 @@ class CtrlResource extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function create(Request $request, Response $response, array $args)
+    public function create(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -174,7 +174,7 @@ class CtrlResource extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function edit(Request $request, Response $response, array $args)
+    public function edit(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -243,7 +243,7 @@ class CtrlResource extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function upload(Request $request, Response $response, array $args)
+    public function upload(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -267,20 +267,18 @@ class CtrlResource extends CtrlBase
         }
         switch ($allPostVars['format']) {
             case 'yaml':
-                $arr = [];
+                $meta = [];
                 foreach (self::META_SECTIONS as $item) {
                     if (!empty($allPostVars[$item])) {
-                        $arr[$item] = Yaml::parse($allPostVars[$item]);
+                        $meta[$item] = Yaml::parse($allPostVars[$item]);
                     }
                 }
-                $meta = Yaml::dump($arr, 50);
                 break;
             case 'json':
                 $meta = [];
                 foreach (self::META_SECTIONS as $item) {
                     $meta[$item] = !empty($allPostVars[$item]) ? json_decode($allPostVars[$item], true) : '';
                 }
-                $meta = json_encode($meta);
                 break;
             default:
                 $meta = '';
@@ -289,34 +287,32 @@ class CtrlResource extends CtrlBase
 
         if (!empty($allPostVars['resid'])) {
             try {
-                $result = $this->apiCall(
+                $this->apiCall(
                     'put',
-                    'resource',
+                    'resource/' . $allPostVars['resid'],
                     [
                         'headers' => [
                             'Authorization' => "Bearer " . $_SESSION['token'],
                             'Accept' => 'application/json',
                         ],
                         'json' => [
-                            'resid' => $allPostVars['resid'],
                             'name' => $allPostVars['name'],
                             'description' => $allPostVars['description'],
                             'appid' => $allPostVars['appid'],
                             'method' => $allPostVars['method'],
                             'uri' => $allPostVars['uri'],
                             'ttl' => $allPostVars['ttl'],
-                            'format' => $allPostVars['format'],
-                            'meta' => $meta,
+                            'metadata' => $meta,
                         ],
                     ]
                 );
-                $this->flash->addMessageNow('info', 'Resource successfully edited.');
+                $this->flash->addMessageNow('info', 'Resource ' . $allPostVars['resid'] . ' successfully edited.');
             } catch (\Exception $e) {
                 $this->flash->addMessageNow('error', $e->getMessage());
             }
         } else {
             try {
-                $result = $this->apiCall(
+                $this->apiCall(
                     'post',
                     'resource',
                     [
@@ -332,7 +328,7 @@ class CtrlResource extends CtrlBase
                             'uri' => $allPostVars['uri'],
                             'ttl' => $allPostVars['ttl'],
                             'format' => $allPostVars['format'],
-                            'meta' => $meta,
+                            'metadata' => $meta,
                         ],
                     ]
                 );
@@ -364,7 +360,7 @@ class CtrlResource extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function delete(Request $request, Response $response, array $args)
+    public function delete(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -409,7 +405,7 @@ class CtrlResource extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function download(Request $request, Response $response, array $args)
+    public function download(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -456,7 +452,7 @@ class CtrlResource extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function import(Request $request, Response $response, array $args)
+    public function import(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -507,7 +503,7 @@ class CtrlResource extends CtrlBase
      *
      * @return string filename of moved file.
      */
-    private function moveUploadedFile(string $directory, $uploadedFile)
+    private function moveUploadedFile(string $directory, $uploadedFile): string
     {
         $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
         try {
@@ -529,7 +525,7 @@ class CtrlResource extends CtrlBase
      *
      * @return array Twig vars.
      */
-    private function getResource(array $allPostVars)
+    private function getResource(array $allPostVars): array
     {
         $arr = [
             'name' => $allPostVars['name'],
@@ -555,7 +551,8 @@ class CtrlResource extends CtrlBase
      *
      * @return array Processors and their details.
      */
-    protected function processorDetails() {
+    protected function processorDetails(): array
+    {
         $processors = [];
         try {
             $result = $this->apiCall(

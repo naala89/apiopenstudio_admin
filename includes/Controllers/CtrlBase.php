@@ -17,6 +17,7 @@
 
 namespace ApiOpenStudioAdmin\Controllers;
 
+use Exception;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use Slim\Flash\Messages;
@@ -38,7 +39,7 @@ class CtrlBase
      *
      * @var array
      */
-    protected $permittedRoles = [];
+    protected array $permittedRoles = [];
 
     /**
      * Setting class.
@@ -134,9 +135,9 @@ class CtrlBase
      *
      * @return ResponseInterface
      *
-     * @throws \Exception API call returned an exception, unify into a single Exception type.
+     * @throws Exception API call returned an exception, unify into a single Exception type.
      */
-    public function apiCall(string $method, string $uri, array $requestOptions = [])
+    public function apiCall(string $method, string $uri, array $requestOptions = []): ResponseInterface
     {
         try {
             $requestOptions['protocols'] = $this->settings['admin']['protocols'];
@@ -149,20 +150,20 @@ class CtrlBase
             $result = $e->getResponse();
             switch ($result->getStatusCode()) {
                 case 401:
-                    throw new \Exception('Unauthorised');
+                    throw new Exception('Unauthorised');
                     break;
                 default:
-                    throw new \Exception($this->getErrorMessage($e));
+                    throw new Exception($this->getErrorMessage($e));
                     break;
             }
         } catch (GuzzleException $e) {
             $result = $e->getResponse();
             switch ($result->getStatusCode()) {
                 case 401:
-                    throw new \Exception('Unauthorised');
+                    throw new Exception('Unauthorised');
                     break;
                 default:
-                    throw new \Exception($this->getErrorMessage($e));
+                    throw new Exception($this->getErrorMessage($e));
                     break;
             }
         }
@@ -173,9 +174,9 @@ class CtrlBase
      *
      * @param integer $uid User ID.
      *
-     * @return array|mixed
+     * @return array
      */
-    protected function apiCallUserRoles(int $uid)
+    protected function apiCallUserRoles(int $uid): array
     {
         $userRoles = [];
         try {
@@ -183,10 +184,11 @@ class CtrlBase
                 'headers' => [
                     'Authorization' => "Bearer " . $_SESSION['token'],
                     'Accept' => 'application/json',
-                ], 'query' => ['uid' => $uid],
+                ],
+                'query' => ['uid' => $uid],
             ]);
             $userRoles = json_decode($result->getBody()->getContents(), true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
         return $userRoles;
@@ -195,11 +197,11 @@ class CtrlBase
     /**
      * Fetch all roles.
      *
-     * @return array|mixed
+     * @return array
      */
-    protected function apiCallRolesAll()
+    protected function apiCallRolesAll(): array
     {
-        $allRoles = [];
+        $userRoles = [];
         try {
             $result = $this->apiCall('GET', 'role/all', [
                 'headers' => [
@@ -209,11 +211,11 @@ class CtrlBase
             ]);
             $result = json_decode($result->getBody()->getContents(), true);
             foreach ($result as $role) {
-                $allRoles[$role['rid']] = $role['name'];
+                $userRoles[$role['rid']] = $role['name'];
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
-        return $allRoles;
+        return $userRoles;
     }
 
     /**
@@ -221,11 +223,11 @@ class CtrlBase
      *
      * @param array $params Sort params.
      *
-     * @return array|mixed
+     * @return array
      */
-    protected function apiCallAccountAll(array $params = [])
+    protected function apiCallAccountAll(array $params = []): array
     {
-        $allAccounts = $query = [];
+        $accounts = $query = [];
         foreach ($params as $key => $value) {
             $query[$key] = $value;
         }
@@ -239,12 +241,12 @@ class CtrlBase
                 ],
                 'query' => $query,
             ]);
-            $allAccounts = json_decode($result->getBody()->getContents(), true);
-        } catch (\Exception $e) {
+            $accounts = json_decode($result->getBody()->getContents(), true);
+        } catch (Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
 
-        return $allAccounts;
+        return $accounts;
     }
 
     /**
@@ -254,14 +256,14 @@ class CtrlBase
      *
      * @return array
      */
-    protected function apiCallApplicationAll(array $params = [])
+    protected function apiCallApplicationAll(array $params = []): array
     {
         foreach ($params as $key => $value) {
             $query[$key] = $value;
         }
         $query['order_by'] = empty($query['order_by']) ? 'name' : $query['order_by'];
 
-        $allApplications = [];
+        $applications = [];
         try {
             $result = $this->apiCall('GET', 'application', [
                 'headers' => [
@@ -270,17 +272,17 @@ class CtrlBase
                 ],
                 'query' => $query,
             ]);
-            $allApplications = json_decode($result->getBody()->getContents(), true);
-        } catch (\Exception $e) {
+            $applications = json_decode($result->getBody()->getContents(), true);
+        } catch (Exception $e) {
         }
 
-        return $allApplications;
+        return $applications;
     }
 
     /**
      * Fetch the access rights for a user.
      *
-     * @param integer $uid User ID.
+     * @param int|null $uid User ID.
      *
      * @return array user access rights.
      *   [
@@ -291,7 +293,7 @@ class CtrlBase
      *     ],
      *   ]
      */
-    private function getAccessRights(int $uid = null)
+    private function getAccessRights(int $uid = null): array
     {
         if (empty($uid)) {
             $uid = isset($_SESSION['uid']) ? $_SESSION['uid'] : '';
@@ -315,12 +317,12 @@ class CtrlBase
      * @return array
      *   [<rid> => <rolename>]
      */
-    private function getRoles()
+    private function getRoles(): array
     {
         $roles = [];
 
         foreach ($this->userAccessRights as $accid => $appids) {
-            foreach ($appids as $appid => $rids) {
+            foreach ($appids as $rids) {
                 foreach ($rids as $rid) {
                     $roles[$rid] = $this->allRoles[$rid];
                 }
@@ -355,7 +357,7 @@ class CtrlBase
                 'query' => $query,
             ]);
             $allAccounts = json_decode($result->getBody()->getContents(), true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
 
         return $allAccounts;
@@ -434,7 +436,7 @@ class CtrlBase
      *
      * @return array Associative array of menu titles and links.
      */
-    protected function getMenus()
+    protected function getMenus(): array
     {
         $menus = [];
 

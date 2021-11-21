@@ -2,7 +2,7 @@ const config = require('./config.js');
 const { src, dest, series, parallel } = require('gulp');
 const uglify = require("gulp-uglify");
 const concat = require("gulp-concat");
-const minify_css = require("gulp-minify-css");
+const clean_css = require("gulp-clean-css");
 const clean = require('gulp-clean');
 const flatten = require('gulp-flatten');
 const babel = require('gulp-babel');
@@ -18,7 +18,7 @@ function clean_style() {
 function style() {
     return src(config.paths.styles.src)
         .pipe(sass())
-        .pipe(minify_css())
+        .pipe(clean_css())
         .pipe(rename({
             suffix: ".min",
             extname: ".css"

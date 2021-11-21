@@ -32,7 +32,7 @@ class CtrlHome extends CtrlBase
      *
      * @var array
      */
-    protected $permittedRoles = [];
+    protected array $permittedRoles = [];
 
     /**
      * Home page.
