@@ -215,13 +215,12 @@ class CtrlResource extends CtrlBase
         $applications = $this->userApplications;
         $processors = $this->processorDetails();
 
-        $obj = json_decode($resource['meta'], true);
-        $resource['meta'] = [];
-        foreach (self::META_SECTIONS as $item) {
-            if (isset($obj[$item])) {
-                $resource['meta'][$item] = Yaml::dump($obj[$item], 500, 2, Yaml::PARSE_OBJECT);
+        foreach (self::META_SECTIONS as $metaSection) {
+            if (isset($resource['meta'][$metaSection])) {
+                $resource['meta'][$metaSection] = Yaml::dump($resource['meta'][$metaSection], 500, 2, Yaml::PARSE_OBJECT);
             }
         }
+
         return $this->view->render($response, 'resource.twig', [
             'operation' => 'edit',
             'menu' => $menu,
