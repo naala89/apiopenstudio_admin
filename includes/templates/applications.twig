@@ -82,10 +82,10 @@
         {% endfor %}
         <div class="row hoverable">
           <div class="col s5 col-height valign-wrapper">
-            <a href="/applications?account_id={{ application.accid }}" title="Filter applications for this account.">{{ account.name }}</a>
+            <a href="/resources?filter_by_account={{ account.accid }}" title="View resources for this account.">{{ account.name }}</a>
           </div>
           <div class="col s5 col-height valign-wrapper">
-            {{ application.name }}
+            <a href="/resources?filter_by_application={{ application.appid }}" title="View resources for this application.">{{ application.name }}</a>
           </div>
           <div class="col s2 col-height valign-wrapper">
             {% if application.appid > 2 and ('Administrator' in roles or 'Account manager' in roles or 'Application manager' in roles) %}
