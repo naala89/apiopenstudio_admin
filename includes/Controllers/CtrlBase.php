@@ -53,28 +53,28 @@ class CtrlBase
      *
      * @var Twig
      */
-    protected $view;
+    protected Twig $view;
 
     /**
      * Flash messages object.
      *
      * @var \Slim\Flash\Messages.
      */
-    protected $flash;
+    protected Messages $flash;
 
     /**
      * Menu items available to the user.
      *
      * @var array.
      */
-    protected $menu;
+    protected array $menu;
 
     /**
      * Array of all roles the user has.
      *
      * @var array
      */
-    protected $allRoles = [];
+    protected array $allRoles = [];
 
     /**
      * Array of the user access rights.
@@ -89,28 +89,28 @@ class CtrlBase
      *      ]
      * ]
      */
-    protected $userAccessRights = [];
+    protected array $userAccessRights = [];
 
     /**
      * Array of oles the user has.
      *
      * @var array
      */
-    protected $userRoles = [];
+    protected array $userRoles = [];
 
     /**
      * Array of accounts the user has access to.
      *
      * @var array
      */
-    protected $userAccounts = [];
+    protected array $userAccounts = [];
 
     /**
      * Array of applications the user has access to.
      *
      * @var array
      */
-    protected $userApplications = [];
+    protected array $userApplications = [];
 
     /**
      * Base constructor.
@@ -341,7 +341,7 @@ class CtrlBase
      * Example:
      *   [<accid> => <account_name>]
      */
-    private function getAccounts(array $params = [])
+    private function getAccounts(array $params = []): array
     {
         $allAccounts = $query = [];
         foreach ($params as $key => $value) {
@@ -377,7 +377,7 @@ class CtrlBase
      *       ],
      *     ]
      */
-    protected function getApplications(array $params = [])
+    protected function getApplications(array $params = []): array
     {
         $allApplications = $this->apiCallApplicationAll($params);
 
@@ -410,7 +410,7 @@ class CtrlBase
      *
      * @return boolean Access validated.
      */
-    protected function checkAccess()
+    protected function checkAccess(): bool
     {
         if (empty($this->userAccessRights) || empty($this->allRoles)) {
             $this->allRoles = $this->apiCallRolesAll();
@@ -447,6 +447,7 @@ class CtrlBase
         } else {
             $menus += [
                 'Home' => '/',
+                'Open Api' => '/open-api',
             ];
             if (in_array('Administrator', $this->userRoles)) {
                 $menus += [
@@ -484,6 +485,10 @@ class CtrlBase
                     'Resources' => '/resources',
                     'Vars' => '/vars',
                 ];
+                $menus['Open Api'] = [
+                    'Docs' => '/open-api',
+                    'Editor' => '/open-api/edit',
+                ];
             }
             $uid = isset($_SESSION['uid']) ? $_SESSION['uid'] : '';
             $menus += [
@@ -502,7 +507,7 @@ class CtrlBase
      *
      * @return string
      */
-    protected function getErrorMessage($e)
+    protected function getErrorMessage($e): string
     {
         if ($e->hasResponse()) {
             $responseObject = json_decode($e->getResponse()->getBody()->getContents());
