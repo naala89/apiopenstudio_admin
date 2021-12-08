@@ -103,3 +103,11 @@ $app->get('/vars', 'CtrlVars:index')->add(new Authentication($container, $settin
 $app->post('/var/create', 'CtrlVars:create')->add(new Authentication($container, $settings, '/login'));
 $app->post('/var/edit', 'CtrlVars:update')->add(new Authentication($container, $settings, '/login'));
 $app->post('/var/delete', 'CtrlVars:delete')->add(new Authentication($container, $settings, '/login'));
+
+/**
+ * OpenApi
+ */
+$app->get('/open-api', 'CtrlOpenApi:index')->add(new Authentication($container, $settings, '/login'));
+$app->get('/open-api/edit', 'CtrlOpenApi:editor')->add(new Authentication($container, $settings, '/login'));
+$app->post('/open-api/edit', 'CtrlOpenApi:editor')->add(new Authentication($container, $settings, '/login'));
+$app->post('/open-api/upload', 'CtrlOpenApi:upload')->add(new Authentication($container, $settings, '/login'));

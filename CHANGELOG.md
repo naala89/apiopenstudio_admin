@@ -26,7 +26,20 @@ v1.0.0-alpha2
   ApiOpenStudio (see issue #54 in ApiOpenStudio GitLab repo).
 - License updates.
 
-v1.0.0-beta1 (in progress)
-==========================
+v1.0.0-alpha3
+=============
 
-- Updated notes for contributing
+- Gulpfile fixes
+- README.md update
+- Updated authentication to use the new JWT aut.
+- Updated handling of responses for:
+  - vars
+  - users
+  - roles
+  - resources
+
+v1.0.0-beta
+===========
+
+- Added OpenApi UI and editor
+- 
