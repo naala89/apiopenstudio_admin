@@ -108,6 +108,7 @@ $app->post('/var/delete', 'CtrlVars:delete')->add(new Authentication($container,
  * OpenApi
  */
 $app->get('/open-api', 'CtrlOpenApi:index')->add(new Authentication($container, $settings, '/login'));
-$app->get('/open-api/edit', 'CtrlOpenApi:editor')->add(new Authentication($container, $settings, '/login'));
-$app->post('/open-api/edit', 'CtrlOpenApi:editor')->add(new Authentication($container, $settings, '/login'));
-$app->post('/open-api/upload', 'CtrlOpenApi:upload')->add(new Authentication($container, $settings, '/login'));
+$app->get('/open-api/edit', 'CtrlOpenApi:edit')->add(new Authentication($container, $settings, '/login'));
+$app->post('/open-api/edit', 'CtrlOpenApi:edit')->add(new Authentication($container, $settings, '/login'));
+$app->get('/open-api/default', 'CtrlOpenApi:default')->add(new Authentication($container, $settings, '/login'));
+$app->get('/open-api/import', 'CtrlOpenApi:import')->add(new Authentication($container, $settings, '/login'));
