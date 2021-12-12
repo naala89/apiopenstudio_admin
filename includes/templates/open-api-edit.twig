@@ -1,0 +1,133 @@
+{% extends "page-no-footer.twig" %}
+
+{% set title="OpenApi Editor" %}
+
+{% block content %}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    .body {
+      font-family: Roboto,sans-serif;
+      font-size: 9px;
+      line-height: 1.42857143;
+      /*color: #444;*/
+      margin: 0px;
+    }
+
+    #swagger-editor {
+      font-size: 1.3em;
+    }
+
+    #editor-wrapper {
+      height: 100%;
+      border:1em solid #000;
+      border:none;
+    }
+
+    .Pane2 {
+      overflow-y: scroll;
+    }
+  </style>
+  <link href="/css/swagger-editor.css" rel="stylesheet">
+
+  <div class="row">
+
+    <form action="/open-api/edit" method="get" id="edit-schema">
+
+      <div class="col s3">
+        <div class="input-field">
+          <select name="appid">
+            <option value="" selected>None</option>
+            {% for application in applications %}
+              <option value="{{ application.appid }}" {% if application.appid == appid %}selected{% endif %}>{{ application.name }}</option>
+            {% endfor %}
+          </select>
+          <label for="application">Select the OpenApi docs for an application.</label>
+        </div>
+      </div>
+
+      <div class="col s3">
+        <button class="btn" type="submit">Edit<i class="material-icons right">edit</i></button>
+      </div>
+
+    </form>
+
+    {% if schema == '"null"' %}
+      <form action="/open-api/default" method="get" id="generate-schema">
+        <input type="hidden" name="appid">
+        <div class="col s3">
+          <button class="btn" type="button" onclick="APIOPENSTUDIO.generateOpenApi();">Generate default<i class="material-icons right">sync</i></button>
+        </div>
+      </form>
+    {% else %}
+      <form action="/open-api/edit" method="post" id="upload-schema">
+        <input type="hidden" name="schema">
+        <div class="col s3">
+          <button class="btn" type="button" onclick="APIOPENSTUDIO.uploadOpenApi();">Upload<i class="material-icons right">cloud_upload</i>
+          </button>
+        </div>
+      </form>
+    {% endif %}
+
+  </div>
+
+  <div class="row">
+    <p><b>Note:</b> After loading the OpenApi schema, please convert to YAML before editing (Edit -> Convert to YAML).</p>
+    <p>When you have finished editing the OpenApi documentation, click on the "UPLOAD" button to upload it to OpenApiStudio.</p>
+  </div>
+
+  {% if schema == '"null"' %}
+    <div class="row">
+      <h4>No API definition provided.
+      </h4>
+    </div>
+    <script>
+      APIOPENSTUDIO.generateOpenApi = () => {
+        let params = new URLSearchParams(location.search)
+        let appid = parseInt(params.get("appid"))
+        let generateForm = $('#generate-schema');
+        generateForm.find('input[name="appid"]').val(appid);
+        generateForm.submit();
+      }
+    </script>
+  {% else %}
+    <script src="/js/swagger-editor-bundle.js"> </script>
+    <script src="/js/swagger-editor-standalone-preset.js"> </script>
+
+    <div class="row">
+      <div id="swagger-editor"></div>
+    </div>
+
+    <script>
+      APIOPENSTUDIO.uploadOpenApi = () => {
+        let params = new URLSearchParams(location.search)
+        let appid = parseInt(params.get("appid"))
+        console.log(appid)
+
+        let editor = ace.edit("ace-editor")
+        schema = editor.getValue()
+
+        let uploadForm = $('#upload-schema');
+        uploadForm.attr('action', '/open-api/edit?appid=' + appid)
+        uploadForm.find('input[name="schema"]').val(schema);
+        uploadForm.submit();
+      }
+
+      window.addEventListener('load', () => {
+        const editor = SwaggerEditorBundle({
+          spec: {{ schema | raw }},
+          dom_id: '#swagger-editor',
+          layout: 'StandaloneLayout',
+          presets: [
+            SwaggerEditorStandalonePreset
+          ]
+        })
+
+        window.editor = editor
+      })
+    </script>
+  {% endif %}
+
+{% endblock %}

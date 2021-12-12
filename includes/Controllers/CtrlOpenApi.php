@@ -18,6 +18,7 @@
 namespace ApiOpenStudioAdmin\Controllers;
 
 use Exception;
+use http\Params;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -58,34 +59,35 @@ class CtrlOpenApi extends CtrlBase
         }
 
         $getParams = $request->getParams();
-        $openApiDef = '';
+        $schema = '';
         if (!empty($getParams['appid'])) {
-            $result = $this->apiCall(
-                'get',
-                'openapi',
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                        'Accept' => 'application/json',
-                    ],
-                    'query' => ['appid' => $getParams['appid']],
-                ]
-            );
-            $openApiDef = $result->getBody()->getContents();
+            try {
+                $result = $this->apiCall(
+                    'get',
+                    'openapi',
+                    [
+                        'headers' => [
+                            'Authorization' => "Bearer " . $_SESSION['token'],
+                            'Accept' => 'application/json',
+                        ],
+                        'query' => ['appid' => $getParams['appid']],
+                    ]
+                );
+                $schema = $result->getBody()->getContents();
+            } catch (Exception $e) {
+                $this->flash->addMessageNow('error', $e->getMessage());
+                $schema = json_encode([]);
+            }
         }
 
         $menu = $this->getMenus();
-        $userApplications = $this->userApplications;
-        if (in_array('Developer', $this->userRoles)) {
-            $userApplications[] = ['appid' => 1, 'name' => 'Core'];
-        }
 
         return $this->view->render($response, 'open-api.twig', [
             'menu' => $menu,
             'accounts' => $this->userAccounts,
-            'applications' => $userApplications,
+            'applications' => $this->userApplications,
             'appid' => $getParams['appid'],
-            'openapi_def' => $openApiDef,
+            'schema' => $schema,
             'roles' => $this->userRoles,
             'flash' => $this->flash,
         ]);
@@ -102,7 +104,7 @@ class CtrlOpenApi extends CtrlBase
      *
      * @throws Exception
      */
-    public function editor(Request $request, Response $response, array $args): ResponseInterface
+    public function edit(Request $request, Response $response, array $args): ResponseInterface
     {
         $this->permittedRoles = [
             'Developer',
@@ -113,9 +115,37 @@ class CtrlOpenApi extends CtrlBase
             return $response->withStatus(302)->withHeader('Location', '/');
         }
 
-        $getParams = $request->getParams();
-        $openApiDef = '';
-        if (!empty($getParams['appid'])) {
+        $requestParams = $request->getParams();
+        $appid = $requestParams['appid'] ?? false;
+
+        $schema = '';
+
+        // Post so we upload.
+        if ($appid && $request->isPost()) {
+            $yaml = $requestParams['schema'];
+            $json = $this->fixYamlEmptyObjectToEmptyArray(json_encode(Yaml::parse($yaml),JSON_UNESCAPED_SLASHES));
+
+            try {
+                $result = $this->apiCall(
+                    'put',
+                    "openapi/$appid",
+                    [
+                        'headers' => [
+                            'Authorization' => "Bearer " . $_SESSION['token'],
+                            'Accept' => 'application/json',
+                        ],
+                        'body' => $json,
+                    ]
+                );
+                $schema = $result->getBody()->getContents();
+            } catch (Exception $e) {
+                $this->flash->addMessage('error', $e->getMessage());
+                $schema = Yaml::dump(Yaml::parse($yaml));
+            }
+        }
+
+        // Not upload, so fetch existing schema from API.
+        if ($appid && empty($schema)) {
             $result = $this->apiCall(
                 'get',
                 'openapi',
@@ -124,29 +154,40 @@ class CtrlOpenApi extends CtrlBase
                         'Authorization' => "Bearer " . $_SESSION['token'],
                         'Accept' => 'application/json',
                     ],
-                    'query' => ['appid' => $getParams['appid']],
+                    'query' => ['appid' => $appid],
                 ]
             );
-            $openApiDef = $result->getBody()->getContents();
-        }
 
-//        $openApiDef = YAML::dump(json_decode($openApiDef));
+            $schema = $this->fixYamlEmptyObjectToEmptyArray($result->getBody()->getContents());
+        }
 
         $menu = $this->getMenus();
-        $userApplications = $this->userApplications;
-        if (in_array('Developer', $this->userRoles)) {
-            $userApplications[] = ['appid' => 1, 'name' => 'Core'];
-        }
 
-        return $this->view->render($response, 'open-api-editor.twig', [
+        return $this->view->render($response, 'open-api-edit.twig', [
             'menu' => $menu,
             'accounts' => $this->userAccounts,
-            'applications' => $userApplications,
-            'appid' => $getParams['appid'],
-            'openapi_def' => $openApiDef,
+            'applications' => $this->userApplications,
+            'appid' => $appid,
+            'schema' => $schema,
             'roles' => $this->userRoles,
             'flash' => $this->flash,
         ]);
+    }
+
+    /**
+     * Yaml::parse will convert to empty objects to empty array...
+     *
+     * @param string $json
+     *
+     * @return string
+     */
+    protected function fixYamlEmptyObjectToEmptyArray(string $json): string
+    {
+        $emptyArrShouldBeObj = ['additionalProperties', 'content', 'items'];
+        foreach ($emptyArrShouldBeObj as $key) {
+            $json = str_replace("\"$key\":[]", "\"$key\":{}", $json);
+        }
+        return $json;
     }
 
     /**
@@ -160,28 +201,29 @@ class CtrlOpenApi extends CtrlBase
      *
      * @throws Exception
      */
-    public function upload(Request $request, Response $response, array $args): ResponseInterface
+    public function default(Request $request, Response $response, array $args): ResponseInterface
     {
+        $this->permittedRoles = [
+            'Developer',
+        ];
         // Validate access.
         if (!$this->checkAccess()) {
-            $this->flash->addMessage('error', 'Access admin: access denied');
+            $this->flash->addMessage('error', 'Access denied');
             return $response->withStatus(302)->withHeader('Location', '/');
         }
 
         $allPostVars = $request->getParams();
         $appid = $allPostVars['appid'];
-        $json = Yaml::parse($allPostVars['schema']);
 
         try {
             $result = $this->apiCall(
-                'put',
-                "openapi/$appid",
+                'post',
+                "openapi/default/$appid",
                 [
                     'headers' => [
                         'Authorization' => "Bearer " . $_SESSION['token'],
                         'Accept' => 'application/json',
                     ],
-                    'json' => $json,
                 ]
             );
         } catch (Exception $e) {
@@ -189,5 +231,40 @@ class CtrlOpenApi extends CtrlBase
         }
 
         return $response->withStatus(302)->withHeader('Location', "/open-api/edit?appid=$appid");
+    }
+
+    /**
+     * Upload OpenApi schema.
+     *
+     * @param \Slim\Http\Request $request Request object.
+     * @param Response $response Response object.
+     * @param array $args Request args.
+     *
+     * @return ResponseInterface
+     *
+     * @throws Exception
+     */
+    public function import(Request $request, Response $response, array $args): ResponseInterface
+    {
+        $this->permittedRoles = [
+            'Developer',
+        ];
+        // Validate access.
+        if (!$this->checkAccess()) {
+            $this->flash->addMessage('error', 'Access denied');
+            return $response->withStatus(302)->withHeader('Location', '/');
+        }
+
+        $menu = $this->getMenus();
+
+        return $this->view->render($response, 'open-api-import.twig', [
+            'menu' => $menu,
+            'accounts' => $this->userAccounts,
+            'applications' => $this->userApplications,
+            'appid' => $getParams['appid'],
+            'schema' => $schema,
+            'roles' => $this->userRoles,
+            'flash' => $this->flash,
+        ]);
     }
 }
