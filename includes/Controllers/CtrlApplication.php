@@ -120,7 +120,7 @@ class CtrlApplication extends CtrlBase
      *
      * @return Response Response.
      */
-    public function create(Request $request, Response $response, array $args)
+    public function create(Request $request, Response $response, array $args): Response
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -148,14 +148,7 @@ class CtrlApplication extends CtrlBase
                         ],
                     ]
                 );
-                if (json_decode($result->getBody()->getContents()) == 'true') {
-                    $this->flash->addMessage('info', "Application $appName created.");
-                } else {
-                    $this->flash->addMessage(
-                        'error',
-                        "Application $appName create failed, check the logs for details."
-                    );
-                }
+                $this->flash->addMessage('info', "Application $appName created.");
             } catch (\Exception $e) {
                 $this->flash->addMessage('error', $e->getMessage());
             }
@@ -173,7 +166,7 @@ class CtrlApplication extends CtrlBase
      *
      * @return Response Response.
      */
-    public function edit(Request $request, Response $response, array $args)
+    public function edit(Request $request, Response $response, array $args): Response
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -222,7 +215,7 @@ class CtrlApplication extends CtrlBase
      *
      * @return Response Response.
      */
-    public function delete(Request $request, Response $response, array $args)
+    public function delete(Request $request, Response $response, array $args): Response
     {
         // Validate access.
         if (!$this->checkAccess()) {
