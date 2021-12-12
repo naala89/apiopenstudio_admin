@@ -88,6 +88,9 @@
             <a href="/resources?filter_by_application={{ application.appid }}" title="View resources for this application.">{{ application.name }}</a>
           </div>
           <div class="col s2 col-height valign-wrapper">
+            <a class="btn-floating btn-small hoverable" href="/open-api?appid={{ application.appid }}">
+              <i class="material-icons modal-app-openapi-trigger swagger-icon" title="OpenApi documentation.">&nbsp;</i>
+            </a>
             {% if application.appid > 2 and ('Administrator' in roles or 'Account manager' in roles or 'Application manager' in roles) %}
               <a class="btn-floating btn-small hoverable">
                 <i class="material-icons modal-app-edit-trigger" accid="{{ application.accid }}" appid="{{ application.appid }}" name="{{ application.name }}" title="Edit this application.">edit</i>
