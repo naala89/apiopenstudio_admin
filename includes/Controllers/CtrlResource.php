@@ -178,7 +178,7 @@ class CtrlResource extends CtrlBase
     {
         // Validate access.
         if (!$this->checkAccess()) {
-            $this->flash->addMessage('error', 'Create a resource: access denied');
+            $this->flash->addMessage('error', 'Edit a resource: access denied');
             return $response->withStatus(302)->withHeader('Location', '/');
         }
 
@@ -408,7 +408,7 @@ class CtrlResource extends CtrlBase
     {
         // Validate access.
         if (!$this->checkAccess()) {
-            $this->flash->addMessage('error', 'Delete a resource: access denied');
+            $this->flash->addMessage('error', 'Download a resource: access denied');
             return $response->withStatus(302)->withHeader('Location', '/');
         }
 
@@ -455,7 +455,7 @@ class CtrlResource extends CtrlBase
     {
         // Validate access.
         if (!$this->checkAccess()) {
-            $this->flash->addMessage('error', 'Delete a resource: access denied');
+            $this->flash->addMessage('error', 'Import a resource: access denied');
             return $response->withStatus(302)->withHeader('Location', '/');
         }
 
