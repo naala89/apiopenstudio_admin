@@ -203,7 +203,7 @@ class CtrlBase
     {
         $userRoles = [];
         try {
-            $result = $this->apiCall('GET', 'role/all', [
+            $result = $this->apiCall('GET', 'role', [
                 'headers' => [
                     'Authorization' => "Bearer " . $_SESSION['token'],
                     'Accept' => 'application/json',
@@ -488,6 +488,7 @@ class CtrlBase
                 $menus['Open Api'] = [
                     'Docs' => '/open-api',
                     'Editor' => '/open-api/edit',
+                    'Import' => '/open-api/import',
                 ];
             }
             $uid = isset($_SESSION['uid']) ? $_SESSION['uid'] : '';
