@@ -1,0 +1,31 @@
+{% extends "page.twig" %}
+
+{% set title="OpenApi Import" %}
+
+{% block content %}
+
+  <div class="row">
+    <p>Import an OpenApi specification file, this will:</p>
+    <ul >
+      <li style="list-style-type: circle">Automatically update your OpenApi documentation for an application and its resources.</li>
+      <li style="list-style-type: circle;">Generate resource stubs in ApiOpenStudio (if they do not exist yet).</li>
+    </ul>
+  </div>
+
+  <div class="row">
+    <div class="col s4">
+      <form action="/open-api/import" method="post" enctype="multipart/form-data">
+        <div class = "file-field input-field">
+          <div class="btn">
+            <span>Upload</span>
+            <input type="file" name="openapi_file" />
+          </div>
+          <div class="file-path-wrapper">
+            <input class="file-path validate" type="text" placeholder="OpenApi file" />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

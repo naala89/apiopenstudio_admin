@@ -89,7 +89,7 @@ class CtrlOpenApi extends CtrlBase
             'appid' => $getParams['appid'],
             'schema' => $schema,
             'roles' => $this->userRoles,
-            'flash' => $this->flash,
+            'messages' => $this->flash->getMessages(),
         ]);
     }
 
@@ -139,7 +139,7 @@ class CtrlOpenApi extends CtrlBase
                 );
                 $schema = $result->getBody()->getContents();
             } catch (Exception $e) {
-                $this->flash->addMessage('error', $e->getMessage());
+                $this->flash->addMessageNow('error', $e->getMessage());
                 $schema = Yaml::dump(Yaml::parse($yaml));
             }
         }
@@ -170,7 +170,7 @@ class CtrlOpenApi extends CtrlBase
             'appid' => $appid,
             'schema' => $schema,
             'roles' => $this->userRoles,
-            'flash' => $this->flash,
+            'messages' => $this->flash->getMessages(),
         ]);
     }
 
@@ -255,16 +255,98 @@ class CtrlOpenApi extends CtrlBase
             return $response->withStatus(302)->withHeader('Location', '/');
         }
 
-        $menu = $this->getMenus();
+        if ($request->isPost()) {
+            $directory = $this->settings['admin']['dir_tmp'];
+            $uploadedFiles = $request->getUploadedFiles();
+            $uploadedFile = $uploadedFiles['openapi_file'];
 
+            if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+
+                try {
+                    $filename = $this->moveUploadedFile($directory, $uploadedFile);
+                    $result = $this->apiCall(
+                        'post',
+                        'openapi/import',
+                        [
+                            'headers' => [
+                                'Authorization' => "Bearer " . $_SESSION['token'],
+                                'Accept' => 'application/json',
+                            ],
+                            'multipart' => [
+                                [
+                                    'name' => 'openapi',
+                                    'contents' => fopen($directory . $filename, 'r'),
+                                ],
+                            ],
+                        ]
+                    );
+                    $results = json_decode($result->getBody()->getContents(), true);
+                    $newMessage = "Created new ApiOpenStudio stubs for resources:<br/><br />";
+                    $updatedResources = $newResources = [];
+                    foreach ($results['updated'] as $updated) {
+                        $updatedResources[] = '[' . strtoupper($updated['method']) . '] '
+                        . $updated['account']
+                        . '/' . $updated['application']
+                        . '/' . $updated['uri'];
+                    }
+                    foreach ($results['new'] as $new) {
+                        $newResources[] = '[' . strtoupper($new['method']) . '] '
+                        . $new['account']
+                        . '/' . $new['application']
+                        . '/' . $new['uri'];
+                    }
+                    if (!empty($updatedResources)) {
+                        $this->flash->addMessageNow(
+                            'info',
+                            'OpenApi updated for resources:<br/><br />' . implode('<br/>', $updatedResources)
+                        );
+                    }
+                    if (!empty($newResources)) {
+                        $this->flash->addMessageNow(
+                            'info',
+                            'Created new ApiOpenStudio stubs for resources:<br/><br />' . implode('<br/>', $newResources)
+                        );
+                    }
+                } catch (\Exception $e) {
+                    $this->flash->addMessageNow('error', $e->getMessage());
+                }
+            } else {
+                $this->flash->addMessageNow('error', 'Error in uploading file');
+            }
+            unlink($directory . $filename);
+        }
+
+        $menu = $this->getMenus();
         return $this->view->render($response, 'open-api-import.twig', [
             'menu' => $menu,
             'accounts' => $this->userAccounts,
             'applications' => $this->userApplications,
-            'appid' => $getParams['appid'],
-            'schema' => $schema,
             'roles' => $this->userRoles,
-            'flash' => $this->flash,
+            'messages' => $this->flash->getMessages(),
         ]);
+    }
+
+    /**
+     * Moves the uploaded file to the upload directory and assigns it a unique name
+     * to avoid overwriting an existing uploaded file.
+     *
+     * @param string $directory Directory to which the file is moved.
+     * @param mixed $uploadedFile Uploaded file to move.
+     *
+     * @return string filename of moved file.
+     */
+    private function moveUploadedFile(string $directory, $uploadedFile): string
+    {
+        $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
+        try {
+            $basename = bin2hex(random_bytes(8));
+        } catch (Exception $e) {
+            $this->flash->addMessageNow($e->getMessage());
+        }
+        $filename = sprintf('%s.%0.8s', $basename, $extension);
+
+        $uploadedFile->moveTo($directory . $filename);
+
+        return $filename;
     }
 }
