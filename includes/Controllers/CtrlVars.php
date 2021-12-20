@@ -48,7 +48,7 @@ class CtrlVars extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function index(Request $request, Response $response, array $args)
+    public function index(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {

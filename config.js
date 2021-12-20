@@ -8,7 +8,13 @@ module.exports = {
             src: ["./includes/js/*.js"],
             dest: "./public/js/"
         },
-        vendor_scripts: ["./includes/vendor/**/*.js"],
-        vendor_styles: ["./includes/vendor/**/*.css"]
+        vendor_scripts: [
+            "./includes/vendor/**/*.js",
+            "./includes/vendor/**/*.js.map"
+        ],
+        vendor_styles: [
+            "./includes/vendor/**/*.css",
+            "./includes/vendor/**/*.css.map"
+        ]
     }
 };

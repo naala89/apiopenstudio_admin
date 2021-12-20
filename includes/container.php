@@ -66,7 +66,7 @@ $container['view'] = function (Container $container) {
  * @param Container $container
  *   Slim container.
  *
- * @return ApiOpenStudio\Admin\Controllers\CtrlAccount
+ * @return Controllers\CtrlAccount
  *   CtrlApplication object.
  */
 $container['CtrlAccount'] = function (Container $container) {
@@ -82,7 +82,7 @@ $container['CtrlAccount'] = function (Container $container) {
  * @param Container $container
  *   Slim container.
  *
- * @return ApiOpenStudio\Admin\Controllers\CtrlAccount
+ * @return Controllers\CtrlApplication
  *   CtrlApplication object.
  */
 $container['CtrlApplication'] = function (Container $container) {
@@ -98,7 +98,7 @@ $container['CtrlApplication'] = function (Container $container) {
  * @param Container $container
  *   Slim container.
  *
- * @return ApiOpenStudio\Admin\Controllers\CtrlHome
+ * @return Controllers\CtrlHome
  *   CtrlHome object.
  */
 $container['CtrlHome'] = function (Container $container) {
@@ -114,7 +114,7 @@ $container['CtrlHome'] = function (Container $container) {
  * @param Container $container
  *   Slim container.
  *
- * @return ApiOpenStudio\Admin\Controllers\CtrlUser
+ * @return Controllers\CtrlUser
  *   CtrlUser object.
  */
 $container['CtrlInvite'] = function (Container $container) {
@@ -130,7 +130,7 @@ $container['CtrlInvite'] = function (Container $container) {
  * @param Container $container
  *   Slim container.
  *
- * @return ApiOpenStudio\Admin\Controllers\CtrlLogin
+ * @return Controllers\CtrlLogin
  *   CtrlLogin object.
  */
 $container['CtrlLogin'] = function (Container $container) {
@@ -178,7 +178,7 @@ $container['CtrlRole'] = function (Container $container) {
  * @param Container $container
  *   Slim container.
  *
- * @return ApiOpenStudio\Admin\Controllers\CtrlUser
+ * @return Controllers\CtrlUser
  *   CtrlUser object.
  */
 $container['CtrlUser'] = function (Container $container) {
@@ -194,7 +194,7 @@ $container['CtrlUser'] = function (Container $container) {
  * @param Container $container
  *   Slim container.
  *
- * @return ApiOpenStudio\Admin\Controllers\CtrlUsers
+ * @return Controllers\CtrlUsers
  *   CtrlUser object.
  */
 $container['CtrlUsers'] = function (Container $container) {
@@ -227,11 +227,27 @@ $container['CtrlUserRole'] = function (Container $container) {
  *   Slim container.
  *
  * @return Controllers\CtrlVars
- *   CtrlRole object.
+ *   CtrlVars object.
  */
 $container['CtrlVars'] = function (Container $container) {
     $settings = $container->get('settings');
     $view = $container->get('view');
     $flash = $container->get('flash');
     return new Controllers\CtrlVars($settings, $view, $flash);
+};
+
+/**
+ * Register OpenApi controller.
+ *
+ * @param Container $container
+ *   Slim container.
+ *
+ * @return Controllers\CtrlOpenApi
+ *   CtrlOpenApi object.
+ */
+$container['CtrlOpenApi'] = function (Container $container) {
+    $settings = $container->get('settings');
+    $view = $container->get('view');
+    $flash = $container->get('flash');
+    return new Controllers\CtrlOpenApi($settings, $view, $flash);
 };

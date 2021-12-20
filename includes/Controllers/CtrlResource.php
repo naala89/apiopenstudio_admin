@@ -178,7 +178,7 @@ class CtrlResource extends CtrlBase
     {
         // Validate access.
         if (!$this->checkAccess()) {
-            $this->flash->addMessage('error', 'Create a resource: access denied');
+            $this->flash->addMessage('error', 'Edit a resource: access denied');
             return $response->withStatus(302)->withHeader('Location', '/');
         }
 
@@ -215,13 +215,12 @@ class CtrlResource extends CtrlBase
         $applications = $this->userApplications;
         $processors = $this->processorDetails();
 
-        $obj = json_decode($resource['meta'], true);
-        $resource['meta'] = [];
-        foreach (self::META_SECTIONS as $item) {
-            if (isset($obj[$item])) {
-                $resource['meta'][$item] = Yaml::dump($obj[$item], 500, 2, Yaml::PARSE_OBJECT);
+        foreach (self::META_SECTIONS as $metaSection) {
+            if (isset($resource['meta'][$metaSection])) {
+                $resource['meta'][$metaSection] = Yaml::dump($resource['meta'][$metaSection], 500, 2, Yaml::PARSE_OBJECT);
             }
         }
+
         return $this->view->render($response, 'resource.twig', [
             'operation' => 'edit',
             'menu' => $menu,
@@ -409,7 +408,7 @@ class CtrlResource extends CtrlBase
     {
         // Validate access.
         if (!$this->checkAccess()) {
-            $this->flash->addMessage('error', 'Delete a resource: access denied');
+            $this->flash->addMessage('error', 'Download a resource: access denied');
             return $response->withStatus(302)->withHeader('Location', '/');
         }
 
@@ -456,7 +455,7 @@ class CtrlResource extends CtrlBase
     {
         // Validate access.
         if (!$this->checkAccess()) {
-            $this->flash->addMessage('error', 'Delete a resource: access denied');
+            $this->flash->addMessage('error', 'Import a resource: access denied');
             return $response->withStatus(302)->withHeader('Location', '/');
         }
 
