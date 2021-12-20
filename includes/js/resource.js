@@ -54,8 +54,8 @@ $(document).ready(function () {
 
       $('ul.tabs').tabs('select', 'yaml');
       ['security', 'process', 'output'].forEach(function (item) {
-        if (typeof APIOPENSTUDIO.doc.meta[item] !== 'undefined') {
-          $('textarea[name=\'' + item + '\']').val(jsyaml.dump(APIOPENSTUDIO.doc.meta[item]))
+        if (typeof APIOPENSTUDIO.doc[item] !== 'undefined') {
+          $('textarea[name=\'' + item + '\']').val(jsyaml.dump(APIOPENSTUDIO.doc[item]))
         } else {
           $('textarea[name=\'' + item + '\']').val('')
         }
