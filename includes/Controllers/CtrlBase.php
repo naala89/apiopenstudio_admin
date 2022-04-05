@@ -178,7 +178,7 @@ class CtrlBase
      */
     protected function apiCallUserRoles(int $uid): array
     {
-        $userRoles = [];
+        $result = [];
         try {
             $result = $this->apiCall('GET', 'user/role', [
                 'headers' => [
@@ -187,11 +187,14 @@ class CtrlBase
                 ],
                 'query' => ['uid' => $uid],
             ]);
-            $userRoles = json_decode($result->getBody()->getContents(), true);
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
         } catch (Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
-        return $userRoles;
+        return $result;
     }
 
     /**
@@ -210,10 +213,14 @@ class CtrlBase
                 ],
             ]);
             $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
             foreach ($result as $role) {
                 $userRoles[$role['rid']] = $role['name'];
             }
         } catch (Exception $e) {
+            $this->flash->addMessageNow('error', $e->getMessage());
         }
         return $userRoles;
     }
@@ -227,7 +234,7 @@ class CtrlBase
      */
     protected function apiCallAccountAll(array $params = []): array
     {
-        $accounts = $query = [];
+        $result = $query = [];
         foreach ($params as $key => $value) {
             $query[$key] = $value;
         }
@@ -241,12 +248,15 @@ class CtrlBase
                 ],
                 'query' => $query,
             ]);
-            $accounts = json_decode($result->getBody()->getContents(), true);
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
         } catch (Exception $e) {
-            $this->flash->addMessageNow('error', $e->getMessage());
+            $this->flash->addMessageNow('data', $e->getMessage());
         }
 
-        return $accounts;
+        return $result;
     }
 
     /**
@@ -263,7 +273,7 @@ class CtrlBase
         }
         $query['order_by'] = empty($query['order_by']) ? 'name' : $query['order_by'];
 
-        $applications = [];
+        $result = [];
         try {
             $result = $this->apiCall('GET', 'application', [
                 'headers' => [
@@ -272,11 +282,15 @@ class CtrlBase
                 ],
                 'query' => $query,
             ]);
-            $applications = json_decode($result->getBody()->getContents(), true);
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
         } catch (Exception $e) {
+            $this->flash->addMessageNow('error', $e->getMessage());
         }
 
-        return $applications;
+        return $result;
     }
 
     /**
@@ -321,7 +335,7 @@ class CtrlBase
     {
         $roles = [];
 
-        foreach ($this->userAccessRights as $accid => $appids) {
+        foreach ($this->userAccessRights as $appids) {
             foreach ($appids as $rids) {
                 foreach ($rids as $rid) {
                     $roles[$rid] = $this->allRoles[$rid];
@@ -343,7 +357,7 @@ class CtrlBase
      */
     private function getAccounts(array $params = []): array
     {
-        $allAccounts = $query = [];
+        $result = $query = [];
         foreach ($params as $key => $value) {
             $query[$key] = $value;
         }
@@ -356,11 +370,15 @@ class CtrlBase
                 ],
                 'query' => $query,
             ]);
-            $allAccounts = json_decode($result->getBody()->getContents(), true);
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
         } catch (Exception $e) {
+            $this->flash->addMessageNow('error', $e->getMessage());
         }
 
-        return $allAccounts;
+        return $result;
     }
 
     /**
@@ -423,7 +441,7 @@ class CtrlBase
             return true;
         }
 
-        foreach ($this->userRoles as $rid => $name) {
+        foreach ($this->userRoles as $name) {
             if (in_array($name, $this->permittedRoles)) {
                 return true;
             }
@@ -510,9 +528,10 @@ class CtrlBase
      */
     protected function getErrorMessage($e): string
     {
+        $message = '';
         if ($e->hasResponse()) {
             $responseObject = json_decode($e->getResponse()->getBody()->getContents());
-            $message = $responseObject->error->message;
+            $message = $responseObject->data->message;
         }
         if (empty($message)) {
             $message = $e->getMessage();

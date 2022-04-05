@@ -31,13 +31,13 @@ class CtrlLogin extends CtrlBase
     /**
      * Login page.
      *
-     * @param \Slim\Http\Request $request Request object.
-     * @param \Slim\Http\Response $response Response object.
+     * @param Request $request Request object.
+     * @param Response $response Response object.
      * @param array $args Request args.
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return ResponseInterface
      */
-    public function login(Request $request, Response $response, array $args)
+    public function login(Request $request, Response $response, array $args): ResponseInterface
     {
         $menu = $this->getMenus();
         return $this->view->render($response, 'login.twig', [
@@ -49,13 +49,13 @@ class CtrlLogin extends CtrlBase
     /**
      * Logout page.
      *
-     * @param \Slim\Http\Request $request Request object.
-     * @param \Slim\Http\Response $response Response object.
+     * @param Request $request Request object.
+     * @param Response $response Response object.
      * @param array $args Request args.
      *
-     * @return \Psr\Http\Message\ResponseInterface Response.
+     * @return ResponseInterface Response.
      */
-    public function logout(Request $request, Response $response, array $args)
+    public function logout(Request $request, Response $response, array $args): ResponseInterface
     {
         unset($_SESSION['token']);
         unset($_SESSION['uid']);
@@ -70,13 +70,13 @@ class CtrlLogin extends CtrlBase
     /**
      * Accept an invite token.
      *
-     * @param \Slim\Http\Request $request Request object.
-     * @param \Slim\Http\Response $response Response object.
+     * @param Request $request Request object.
+     * @param Response $response Response object.
      * @param array $args Request args.
      *
      * @return ResponseInterface Response.
      */
-    public function inviteAccept(Request $request, Response $response, array $args)
+    public function inviteAccept(Request $request, Response $response, array $args): ResponseInterface
     {
         unset($_SESSION['token']);
         unset($_SESSION['uid']);
@@ -116,13 +116,13 @@ class CtrlLogin extends CtrlBase
     /**
      * Request a user password reset.
      *
-     * @param \Slim\Http\Request $request Request object.
-     * @param \Slim\Http\Response $response Response object.
+     * @param Request $request Request object.
+     * @param Response $response Response object.
      * @param array $args Request args.
      *
      * @return ResponseInterface Response.
      */
-    public function passwordReset(Request $request, Response $response, array $args)
+    public function passwordReset(Request $request, Response $response, array $args): ResponseInterface
     {
         unset($_SESSION['token']);
         unset($_SESSION['uid']);
@@ -139,18 +139,10 @@ class CtrlLogin extends CtrlBase
                 ]);
             }
             try {
-                $result = $this->apiCall(
-                    'post',
-                    'password/reset',
-                    [
-                        'headers' => [
-                            'Accept' => 'application/json',
-                        ],
-                        'form_params' => [
-                            'email' => $email,
-                        ],
-                    ]
-                );
+                $this->apiCall('post', 'password/reset', [
+                    'headers' => ['Accept' => 'application/json'],
+                    'form_params' => ['email' => $email],
+                ]);
                 $this->flash->addMessageNow(
                     'info',
                     'Password reset link activated, which will expire in 15 minutes. Please check your emails.'
@@ -173,13 +165,13 @@ class CtrlLogin extends CtrlBase
     /**
      * Reset a user password.
      *
-     * @param \Slim\Http\Request $request Request object.
-     * @param \Slim\Http\Response $response Response object.
+     * @param Request $request Request object.
+     * @param Response $response Response object.
      * @param array $args Request args.
      *
      * @return ResponseInterface Response.
      */
-    public function setPassword(Request $request, Response $response, array $args)
+    public function setPassword(Request $request, Response $response, array $args): ResponseInterface
     {
         unset($_SESSION['token']);
         unset($_SESSION['uid']);
@@ -224,19 +216,13 @@ class CtrlLogin extends CtrlBase
         }
 
         try {
-            $result = $this->apiCall(
-                'post',
-                'password/reset',
-                [
-                    'headers' => [
-                        'Accept' => 'application/json',
-                    ],
-                    'form_params' => [
-                        'token' => $token,
-                        'password' => $password,
-                    ],
-                ]
-            );
+            $this->apiCall('post', 'password/reset', [
+                'headers' => ['Accept' => 'application/json'],
+                'form_params' => [
+                    'token' => $token,
+                    'password' => $password,
+                ],
+            ]);
             $this->flash->addMessageNow('info', 'Password reset.');
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());

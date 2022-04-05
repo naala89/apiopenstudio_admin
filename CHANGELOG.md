@@ -29,8 +29,8 @@ v1.0.0-alpha2
 v1.0.0-alpha3
 =============
 
-- Gulpfile fixes
-- README.md update
+- Gulpfile fixes.
+- README.md update.
 - Updated authentication to use the new JWT aut.
 - Updated handling of responses for:
   - vars
@@ -41,5 +41,8 @@ v1.0.0-alpha3
 v1.0.0-beta
 ===========
 
-- Added OpenApi UI and editor
-- 
+- Added OpenApi UI and editor.
+- Updated all API calls the handle possible new JSON response objects
+  (see https://gitlab.com/apiopenstudio/apiopenstudio_admin/-/issues/23):
+  - New JSON error response object.
+  - Responses can now be raw JSON response or a JSON response object.

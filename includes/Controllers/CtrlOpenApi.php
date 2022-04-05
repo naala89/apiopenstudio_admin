@@ -41,7 +41,7 @@ class CtrlOpenApi extends CtrlBase
     /**
      * OpenApi documentation page.
      *
-     * @param \Slim\Http\Request $request Request object.
+     * @param Request $request Request object.
      * @param Response $response Response object.
      * @param array $args Request args.
      *
@@ -62,21 +62,18 @@ class CtrlOpenApi extends CtrlBase
         $schema = '';
         if (!empty($getParams['appid'])) {
             try {
-                $result = $this->apiCall(
-                    'get',
-                    'openapi',
-                    [
-                        'headers' => [
-                            'Authorization' => "Bearer " . $_SESSION['token'],
-                            'Accept' => 'application/json',
-                        ],
-                        'query' => ['appid' => $getParams['appid']],
-                    ]
-                );
-                $schema = $result->getBody()->getContents();
+                $result = $this->apiCall('get', 'openapi', [
+                    'headers' => [
+                        'Authorization' => "Bearer " . $_SESSION['token'],
+                        'Accept' => 'application/json',
+                    ],
+                    'query' => ['appid' => $getParams['appid']],
+                ]);
+                $result = json_decode($result->getBody()->getContents(), true);
+                $schema = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
             } catch (Exception $e) {
                 $this->flash->addMessageNow('error', $e->getMessage());
-                $schema = json_encode([]);
+                $schema = [];
             }
         }
 
@@ -96,7 +93,7 @@ class CtrlOpenApi extends CtrlBase
     /**
      * OpenApi editor page.
      *
-     * @param \Slim\Http\Request $request Request object.
+     * @param Request $request Request object.
      * @param Response $response Response object.
      * @param array $args Request args.
      *
@@ -126,18 +123,15 @@ class CtrlOpenApi extends CtrlBase
             $json = $this->fixYamlEmptyObjectToEmptyArray(json_encode(Yaml::parse($yaml),JSON_UNESCAPED_SLASHES));
 
             try {
-                $result = $this->apiCall(
-                    'put',
-                    "openapi/$appid",
-                    [
-                        'headers' => [
-                            'Authorization' => "Bearer " . $_SESSION['token'],
-                            'Accept' => 'application/json',
-                        ],
-                        'body' => $json,
-                    ]
-                );
-                $schema = $result->getBody()->getContents();
+                $result = $this->apiCall('put', "openapi/$appid", [
+                    'headers' => [
+                        'Authorization' => "Bearer " . $_SESSION['token'],
+                        'Accept' => 'application/json',
+                    ],
+                    'body' => $json,
+                ]);
+                $result = json_decode($result->getBody()->getContents(), true);
+                $schema = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
             } catch (Exception $e) {
                 $this->flash->addMessageNow('error', $e->getMessage());
                 $schema = Yaml::dump(Yaml::parse($yaml));
@@ -146,19 +140,17 @@ class CtrlOpenApi extends CtrlBase
 
         // Not upload, so fetch existing schema from API.
         if ($appid && empty($schema)) {
-            $result = $this->apiCall(
-                'get',
-                'openapi',
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                        'Accept' => 'application/json',
-                    ],
-                    'query' => ['appid' => $appid],
-                ]
-            );
-
-            $schema = $this->fixYamlEmptyObjectToEmptyArray($result->getBody()->getContents());
+            $result = $this->apiCall('get', 'openapi', [
+                'headers' => [
+                    'Authorization' => "Bearer " . $_SESSION['token'],
+                    'Accept' => 'application/json',
+                ],
+                'query' => ['appid' => $appid],
+            ]);
+            $result = json_decode($result->getBody()->getContents(), true);
+            $schema = isset($result['result']) && (isset($result['data']) || $result['data'] === null) ? $result['data'] : $result;
+            $schema = $schema ?? '[]';
+            $schema = $this->fixYamlEmptyObjectToEmptyArray($schema);
         }
 
         $menu = $this->getMenus();
@@ -193,7 +185,7 @@ class CtrlOpenApi extends CtrlBase
     /**
      * Upload OpenApi schema.
      *
-     * @param \Slim\Http\Request $request Request object.
+     * @param Request $request Request object.
      * @param Response $response Response object.
      * @param array $args Request args.
      *
@@ -216,16 +208,12 @@ class CtrlOpenApi extends CtrlBase
         $appid = $allPostVars['appid'];
 
         try {
-            $result = $this->apiCall(
-                'post',
-                "openapi/default/$appid",
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                        'Accept' => 'application/json',
-                    ],
-                ]
-            );
+            $this->apiCall('post', "openapi/default/$appid", [
+                'headers' => [
+                    'Authorization' => "Bearer " . $_SESSION['token'],
+                    'Accept' => 'application/json',
+                ],
+            ]);
         } catch (Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
         }
@@ -236,7 +224,7 @@ class CtrlOpenApi extends CtrlBase
     /**
      * Upload OpenApi schema.
      *
-     * @param \Slim\Http\Request $request Request object.
+     * @param Request $request Request object.
      * @param Response $response Response object.
      * @param array $args Request args.
      *
@@ -264,24 +252,19 @@ class CtrlOpenApi extends CtrlBase
 
                 try {
                     $filename = $this->moveUploadedFile($directory, $uploadedFile);
-                    $result = $this->apiCall(
-                        'post',
-                        'openapi/import',
-                        [
-                            'headers' => [
-                                'Authorization' => "Bearer " . $_SESSION['token'],
-                                'Accept' => 'application/json',
+                    $result = $this->apiCall('post', 'openapi/import', [
+                        'headers' => [
+                            'Authorization' => "Bearer " . $_SESSION['token'],
+                            'Accept' => 'application/json',
+                        ],
+                        'multipart' => [
+                            [
+                                'name' => 'openapi',
+                                'contents' => fopen($directory . $filename, 'r'),
                             ],
-                            'multipart' => [
-                                [
-                                    'name' => 'openapi',
-                                    'contents' => fopen($directory . $filename, 'r'),
-                                ],
-                            ],
-                        ]
-                    );
+                        ],
+                    ]);
                     $results = json_decode($result->getBody()->getContents(), true);
-                    $newMessage = "Created new ApiOpenStudio stubs for resources:<br/><br />";
                     $updatedResources = $newResources = [];
                     foreach ($results['updated'] as $updated) {
                         $updatedResources[] = '[' . strtoupper($updated['method']) . '] '
@@ -307,7 +290,7 @@ class CtrlOpenApi extends CtrlBase
                             'Created new ApiOpenStudio stubs for resources:<br/><br />' . implode('<br/>', $newResources)
                         );
                     }
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $this->flash->addMessageNow('error', $e->getMessage());
                 }
             } else {

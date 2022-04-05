@@ -84,7 +84,8 @@ class CtrlVars extends CtrlBase
                 ],
                 'query' => $query,
             ]);
-            $vars = json_decode($result->getBody()->getContents(), true);
+            $result = json_decode($result->getBody()->getContents(), true);
+            $vars = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
@@ -142,7 +143,7 @@ class CtrlVars extends CtrlBase
         // Pagination.
         $page = isset($params['page']) ? $allParams['page'] : 1;
         $pages = ceil(count($vars) / $this->settings['admin']['pagination_step']);
-        $users = array_slice(
+        $sortedVars = array_slice(
             $vars,
             ($page - 1) * $this->settings['admin']['pagination_step'],
             $this->settings['admin']['pagination_step'],
@@ -192,7 +193,7 @@ class CtrlVars extends CtrlBase
         }
 
         try {
-            $result = $this->apiCall('post', 'var_store', [
+            $this->apiCall('post', 'var_store', [
                 'headers' => [
                     'Authorization' => "Bearer " . $_SESSION['token'],
                     'Accept' => 'application/json',
@@ -235,7 +236,7 @@ class CtrlVars extends CtrlBase
         }
 
         try {
-            $result = $this->apiCall('put', 'var_store/' . $params['vid'], [
+            $this->apiCall('put', 'var_store/' . $params['vid'], [
                 'headers' => [
                     'Authorization' => "Bearer " . $_SESSION['token'],
                     'Accept' => 'application/json',
@@ -283,11 +284,7 @@ class CtrlVars extends CtrlBase
                     'Accept' => 'application/json',
                 ],
             ]);
-            if (json_decode($result->getBody()->getContents()) == 'true') {
-                $this->flash->addMessageNow('info', 'Var successfully deleted.');
-            } else {
-                $this->flash->addMessageNow('error', 'Var not deleted, please check the logs.');
-            }
+            $this->flash->addMessageNow('info', "Var ($vid) successfully deleted.");
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }

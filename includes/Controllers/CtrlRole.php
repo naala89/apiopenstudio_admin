@@ -48,7 +48,7 @@ class CtrlRole extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function index(Request $request, Response $response, array $args)
+    public function index(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -68,22 +68,19 @@ class CtrlRole extends CtrlBase
             $query['direction'] = $allParams['direction'];
         }
 
+        $roles = [];
         try {
-            $result = $this->apiCall(
-                'get',
-                'role/all',
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                        'Accept' => 'application/json',
-                    ],
-                    'query' => $query,
-                ]
-            );
-            $roles = json_decode($result->getBody()->getContents(), true);
+            $result = $this->apiCall('get', 'role/all', [
+                'headers' => [
+                    'Authorization' => "Bearer " . $_SESSION['token'],
+                    'Accept' => 'application/json',
+                ],
+                'query' => $query,
+            ]);
+            $result = json_decode($result->getBody()->getContents(), true);
+            $roles = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
         } catch (\Exception $e) {
             $this->flash->addMessageNow($e->getMessage());
-            $roles = [];
         }
 
         // Pagination.
@@ -114,7 +111,7 @@ class CtrlRole extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function create(Request $request, Response $response, array $args)
+    public function create(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -127,17 +124,13 @@ class CtrlRole extends CtrlBase
         $name = !empty($allParams['name']) ? $allParams['name'] : '';
 
         try {
-            $this->apiCall(
-                'post',
-                "role",
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                        'Accept' => 'application/json',
-                    ],
-                    'form_params' => ['name' => $name],
-                ]
-            );
+            $this->apiCall('post', "role", [
+                'headers' => [
+                    'Authorization' => "Bearer {$_SESSION['token']}",
+                    'Accept' => 'application/json',
+                ],
+                'form_params' => ['name' => $name],
+            ]);
             $this->flash->addMessageNow('info', "Role successfully $name created.");
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
@@ -155,7 +148,7 @@ class CtrlRole extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function update(Request $request, Response $response, array $args)
+    public function update(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -168,17 +161,14 @@ class CtrlRole extends CtrlBase
         $name = !empty($allParams['name']) ? $allParams['name'] : '';
         $rid = !empty($allParams['rid']) ? $allParams['rid'] : '';
 
-        try {$this->apiCall(
-                'put',
-                'role',
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                        'Accept' => 'application/json',
-                    ],
-                    'json' => ['rid' => $rid, 'name' => $name],
-                ]
-            );
+        try {
+            $this->apiCall('put', 'role', [
+                'headers' => [
+                    'Authorization' => "Bearer {$_SESSION['token']}",
+                    'Accept' => 'application/json',
+                ],
+                'json' => ['rid' => $rid, 'name' => $name],
+            ]);
             $this->flash->addMessageNow('info', "Role successfully updated to $name.");
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
@@ -196,7 +186,7 @@ class CtrlRole extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function delete(Request $request, Response $response, array $args)
+    public function delete(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -209,17 +199,14 @@ class CtrlRole extends CtrlBase
         $rid = !empty($allParams['rid']) ? $allParams['rid'] : '';
 
         try {
-            $result = $this->apiCall(
-                'delete',
-                "role/$rid",
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                        'Accept' => 'application/json',
-                    ],
-                ]
-            );
-            $success = json_decode($result->getBody()->getContents(), true);
+            $result = $this->apiCall('delete', "role/$rid", [
+                'headers' => [
+                    'Authorization' => "Bearer {$_SESSION['token']}",
+                    'Accept' => 'application/json',
+                ],
+            ]);
+            $result = json_decode($result->getBody()->getContents(), true);
+            $success = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
             if ($success == 'true') {
                 $this->flash->addMessageNow('info', 'Role successfully deleted.');
             } else {

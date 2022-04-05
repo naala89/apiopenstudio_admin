@@ -81,18 +81,16 @@ class CtrlUser extends CtrlBase
         $user = [];
 
         try {
-            $result = $this->apiCall(
-                'get',
-                "user/$uid",
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                        'Accept' => 'application/json',
-                    ],
-                ]
-            );
-            $user = json_decode($result->getBody()->getContents(), true);
-            $user = isset($user[0]) ? $user[0] : [];
+            $result = $this->apiCall('get', "user", [
+                'headers' => [
+                    'Authorization' => "Bearer {$_SESSION['token']}",
+                    'Accept' => 'application/json',
+                ],
+                'query' => ['uid' => $uid],
+            ]);
+            $result = json_decode($result->getBody()->getContents(), true);
+            $user = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
+            $user = $user[0] ?? [];
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
@@ -126,20 +124,15 @@ class CtrlUser extends CtrlBase
         $user = [];
 
         try {
-            $result = $this->apiCall(
-                'get',
-                'user',
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                        'Accept' => 'application/json',
-                    ],
-                    'query' => [
-                        'uid' => $uid,
-                    ],
-                ]
-            );
-            $user = json_decode($result->getBody()->getContents(), true);
+            $result = $this->apiCall('get', 'user', [
+                'headers' => [
+                    'Authorization' => "Bearer {$_SESSION['token']}",
+                    'Accept' => 'application/json',
+                ],
+                'query' => ['uid' => $uid],
+            ]);
+            $result = json_decode($result->getBody()->getContents(), true);
+            $user = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
@@ -186,17 +179,13 @@ class CtrlUser extends CtrlBase
             $uid = $allPostVars['uid'];
             unset($allPostVars['uid']);
             try {
-                $result = $this->apiCall(
-                    'put',
-                    "user/$uid",
-                    [
-                        'headers' => [
-                            'Authorization' => "Bearer " . $_SESSION['token'],
-                            'Accept' => 'application/json',
-                        ],
-                        'json' => $allPostVars,
-                    ]
-                );
+                $this->apiCall('put', "user/$uid", [
+                    'headers' => [
+                        'Authorization' => "Bearer {$_SESSION['token']}",
+                        'Accept' => 'application/json',
+                    ],
+                    'json' => $allPostVars,
+                ]);
                 $this->flash->addMessageNow('info', 'User updated.');
             } catch (\Exception $e) {
                 $this->flash->addMessageNow('error', $e->getMessage());
@@ -211,17 +200,13 @@ class CtrlUser extends CtrlBase
         } else {
             // Create a user.
             try {
-                $this->apiCall(
-                    'post',
-                    'user',
-                    [
-                        'headers' => [
-                            'Authorization' => "Bearer " . $_SESSION['token'],
-                            'Accept' => 'application/json',
-                        ],
-                        'form_params' => $allPostVars,
-                    ]
-                );
+                $this->apiCall('post', 'user', [
+                    'headers' => [
+                        'Authorization' => "Bearer {$_SESSION['token']}",
+                        'Accept' => 'application/json',
+                    ],
+                    'form_params' => $allPostVars,
+                ]);
                 $this->flash->addMessageNow('info', 'User created.');
             } catch (\Exception $e) {
                 $this->flash->addMessageNow('error', $e->getMessage());
@@ -234,17 +219,14 @@ class CtrlUser extends CtrlBase
             }
         }
         try {
-            $result = $this->apiCall(
-                'get',
-                'user',
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                        'Accept' => 'application/json',
-                    ],
-                ]
-            );
-            $users = (array) json_decode($result->getBody()->getContents());
+            $result = $this->apiCall('get', 'user', [
+                'headers' => [
+                    'Authorization' => "Bearer " . $_SESSION['token'],
+                    'Accept' => 'application/json',
+                ],
+            ]);
+            $result = json_decode($result->getBody()->getContents(), true);
+            $users = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
             $users = [];
@@ -260,8 +242,8 @@ class CtrlUser extends CtrlBase
     /**
      * Delete a user account.
      *
-     * @param \Slim\Http\Request $request Request object.
-     * @param \Slim\Http\Response $response Response object.
+     * @param Request $request Request object.
+     * @param Response $response Response object.
      * @param array $args Request args.
      *
      * @return ResponseInterface Response.
@@ -278,17 +260,14 @@ class CtrlUser extends CtrlBase
         $uid = $args['uid'];
 
         try {
-            $result = $this->apiCall(
-                'delete',
-                "user/$uid",
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                        'Accept' => 'application/json',
-                    ],
-                ]
-            );
+            $result = $this->apiCall('delete', "user/$uid", [
+                'headers' => [
+                    'Authorization' => "Bearer {$_SESSION['token']}",
+                    'Accept' => 'application/json',
+                ],
+            ]);
             $result = json_decode($result->getBody()->getContents(), true);
+            $result = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
             if ($result == 'true') {
                 $this->flash->addMessageNow('info', 'User successfully deleted.');
             } else {

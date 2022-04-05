@@ -17,6 +17,7 @@
 
 namespace ApiOpenStudioAdmin\Controllers;
 
+use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -45,9 +46,9 @@ class CtrlUsers extends CtrlBase
      * @param Response $response Response object.
      * @param array $args Request args.
      *
-     * @return \Psr\Http\Message\ResponseInterface Response.
+     * @return ResponseInterface Response.
      */
-    public function index(Request $request, Response $response, array $args)
+    public function index(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -68,19 +69,17 @@ class CtrlUsers extends CtrlBase
         }
         if (!empty($allParams['direction'])) {
             $query['direction'] = $allParams['direction'];
-        } try {
-            $result = $this->apiCall(
-                'get',
-                'user',
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                        'Accept' => 'application/json',
-                    ],
-                    'query' => $query
-                ]
-            );
-            $users = (array) json_decode($result->getBody()->getContents());
+        }
+        try {
+            $result = $this->apiCall('get', 'user', [
+                'headers' => [
+                    'Authorization' => "Bearer {$_SESSION['token']}",
+                    'Accept' => 'application/json',
+                ],
+                'query' => $query
+            ]);
+            $result = json_decode($result->getBody()->getContents(), true);
+            $users = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
             $users = [];
