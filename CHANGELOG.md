@@ -42,7 +42,7 @@ v1.0.0-beta
 ===========
 
 - Added OpenApi UI and editor.
-  - Updated all API calls the handle possible new JSON response objects
-    (see https://gitlab.com/apiopenstudio/apiopenstudio_admin/-/issues/23):
-    - New JSON response object.
+- Updated all API calls the handle possible new JSON response objects
+  (see https://gitlab.com/apiopenstudio/apiopenstudio_admin/-/issues/23):
+  - New JSON error response object.
   - Responses can now be raw JSON response or a JSON response object.
