@@ -49,7 +49,7 @@ class CtrlUserRole extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function index(Request $request, Response $response, array $args)
+    public function index(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -62,18 +62,18 @@ class CtrlUserRole extends CtrlBase
         $token = $_SESSION['token'];
 
         try {
-            $result = $this->apiCall('GET', 'user/role', [
-                'headers' => [
-                    'Authorization' => "Bearer $token",
-                ],
+            $result = $this->apiCall('get', 'user/role', [
+                'headers' => ['Authorization' => "Bearer $token"],
                 'query' => $params,
             ]);
-            $userRoles = json_decode($result->getBody()->getContents(), true);
+            $result = json_decode($result->getBody()->getContents(), true);
+            $userRoles = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
 
-            $result = $this->apiCall('GET', 'user', [
+            $result = $this->apiCall('get', 'user', [
                 'headers' => ['Authorization' => "Bearer $token"],
             ]);
-            $users = json_decode($result->getBody()->getContents(), true);
+            $result = json_decode($result->getBody()->getContents(), true);
+            $users = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
         } catch (Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
             return $this->view->render($response, 'user-roles.twig', [
@@ -113,7 +113,7 @@ class CtrlUserRole extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function create(Request $request, Response $response, array $args)
+    public function create(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -125,11 +125,11 @@ class CtrlUserRole extends CtrlBase
         $token = $_SESSION['token'];
 
         try {
-            $this->apiCall('POST', 'user/role', [
-            'headers' => [
+            $this->apiCall('post', 'user/role', [
+                'headers' => [
                     'Authorization' => "Bearer $token",
                 ],
-                    'form_params' => [
+                'form_params' => [
                     'uid' => $allPostVars['uid'],
                     'accid' => $allPostVars['accid'],
                     'appid' => $allPostVars['appid'],
@@ -163,7 +163,7 @@ class CtrlUserRole extends CtrlBase
      *
      * @return ResponseInterface Response.
      */
-    public function delete(Request $request, Response $response, array $args)
+    public function delete(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -181,10 +181,8 @@ class CtrlUserRole extends CtrlBase
         $token = $_SESSION['token'];
 
         try {
-            $this->apiCall('DELETE', 'user/role/' . $urid, [
-                'headers' => [
-                    'Authorization' => "Bearer $token",
-                ],
+            $this->apiCall('delete', 'user/role/' . $urid, [
+                'headers' => ['Authorization' => "Bearer $token"],
             ]);
         } catch (Exception $e) {
             $result = $e->getResponse();

@@ -56,10 +56,9 @@ class CtrlInvite extends CtrlBase
             return $response->withStatus(302)->withHeader('Location', '/');
         }
         $menu = $this->getMenus();
-
         $params = $request->getParams();
-
         $invites = [];
+
         try {
             $result = $this->apiCall(
                 'get',
@@ -72,14 +71,15 @@ class CtrlInvite extends CtrlBase
                     'query' => $params,
                 ]
             );
-            $invites = json_decode($result->getBody()->getContents(), true);
+            $result = json_decode($result->getBody()->getContents(), true);
+            $invites = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
 
         // Pagination.
         $page = isset($params['page']) ? $params['page'] : 1;
-        $pages = ceil(count($invites) / $this->settings['admin']['pagination_step']);
+        $pages = ceil(count($result) / $this->settings['admin']['pagination_step']);
         $invites = array_slice(
             $invites,
             ($page - 1) * $this->settings['admin']['pagination_step'],
@@ -132,12 +132,15 @@ class CtrlInvite extends CtrlBase
                 ]
             );
             $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && isset($result['data'])) {
+                $result = $result['data'];
+            }
             $this->flash->addMessageNow('info', $result);
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
 
-        $invites = [];
+        $result = [];
         try {
             $result = $this->apiCall(
                 'get',
@@ -149,16 +152,19 @@ class CtrlInvite extends CtrlBase
                     ],
                 ]
             );
-            $invites = json_decode($result->getBody()->getContents(), true);
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && isset($result['data'])) {
+                $result = $result['data'];
+            }
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
 
         // Pagination.
         $page = 1;
-        $pages = ceil(count($invites) / $this->settings['admin']['pagination_step']);
-        $invites = array_slice(
-            $invites,
+        $pages = ceil(count($result) / $this->settings['admin']['pagination_step']);
+        $result = array_slice(
+            $result,
             ($page - 1) * $this->settings['admin']['pagination_step'],
             $this->settings['admin']['pagination_step'],
             true
@@ -166,7 +172,7 @@ class CtrlInvite extends CtrlBase
 
         return $this->view->render($response, 'invites.twig', [
             'menu' => $menu,
-            'invites' => $invites,
+            'invites' => $result,
             'params' => [],
             'page' => $page,
             'pages' => $pages,
@@ -210,6 +216,9 @@ class CtrlInvite extends CtrlBase
                 ]
             );
             $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && isset($result['data'])) {
+                $result = $result['data'];
+            }
 
             $message = '';
             if (isset($result['resent'])) {

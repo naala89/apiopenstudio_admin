@@ -17,6 +17,8 @@
 
 namespace ApiOpenStudioAdmin\Controllers;
 
+use Exception;
+use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -42,11 +44,11 @@ class CtrlAccount extends CtrlBase
     /**
      * Accounts page.
      *
-     * @param \Slim\Http\Request $request Request object.
-     * @param \Slim\Http\Response $response Response object.
+     * @param Request $request Request object.
+     * @param Response $response Response object.
      * @param array $args Request args.
      *
-     * @return \Psr\Http\Message\ResponseInterface|Response Response.
+     * @return ResponseInterface|Response Response.
      */
     public function index(Request $request, Response $response, array $args)
     {
@@ -66,7 +68,7 @@ class CtrlAccount extends CtrlBase
         }
         $params['order_by'] = 'name';
         $params['direction'] = isset($allParams['direction']) ? $allParams['direction'] : 'asc';
-        $page = isset($allParams['page']) ? $allParams['page'] : 1;
+        $page = $allParams['page'] ?? 1;
 
         $accounts = $this->apiCallAccountAll($params);
 
@@ -80,7 +82,7 @@ class CtrlAccount extends CtrlBase
         );
 
         return $this->view->render($response, 'accounts.twig', [
-            'keyword' => isset($params['keyword']) ? $params['keyword'] : '',
+            'keyword' => $params['keyword'] ?? '',
             'direction' => strtoupper($params['direction']),
             'page' => $page,
             'pages' => $pages,
@@ -94,13 +96,13 @@ class CtrlAccount extends CtrlBase
     /**
      * Create an account.
      *
-     * @param \Slim\Http\Request $request Request object.
-     * @param \Slim\Http\Response $response Response object.
+     * @param Request $request Request object.
+     * @param Response $response Response object.
      * @param array $args Request args.
      *
      * @return Response Response.
      */
-    public function create(Request $request, Response $response, array $args)
+    public function create(Request $request, Response $response, array $args): Response
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -129,12 +131,14 @@ class CtrlAccount extends CtrlBase
                     ],
                 ]
             );
-            if (json_decode($result->getBody()->getContents()) == 'true') {
-                $this->flash->addMessage('info', "Account $name created");
-            } else {
-                $this->flash->addMessage('error', "Account $name creation failed, check the logs for details.");
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && isset($result['data'])) {
+                $result = $result['data'];
             }
-        } catch (\Exception $e) {
+            if (isset($result['accid']) && isset($result['name'])) {
+                $this->flash->addMessage('info', "Account {$result['name']} (accid: {$result['accid']}) created");
+            }
+        } catch (Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
         }
 
@@ -144,13 +148,13 @@ class CtrlAccount extends CtrlBase
     /**
      * Edit an account.
      *
-     * @param \Slim\Http\Request $request Request object.
-     * @param \Slim\Http\Response $response Response object.
+     * @param Request $request Request object.
+     * @param Response $response Response object.
      * @param array $args Request args.
      *
      * @return Response Response.
      */
-    public function edit(Request $request, Response $response, array $args)
+    public function edit(Request $request, Response $response, array $args): Response
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -167,7 +171,7 @@ class CtrlAccount extends CtrlBase
 
         // Edit the account.
         try {
-            $result = $this->apiCall(
+            $this->apiCall(
                 'put',
                 "account/$accid/" . urlencode($name),
                 [
@@ -180,15 +184,8 @@ class CtrlAccount extends CtrlBase
                     ],
                 ]
             );
-            if (json_decode($result->getBody()->getContents()) == 'true') {
-                $this->flash->addMessage('info', "Account '$accid' updated to '$name'.");
-            } else {
-                $this->flash->addMessage(
-                    'error',
-                    "Account '$accid' update to '$name failed, check the log for details.'"
-                );
-            }
-        } catch (\Exception $e) {
+            $this->flash->addMessage('info', "Account '$accid' updated to '$name'.");
+        } catch (Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
         }
         return $response->withStatus(302)->withHeader('Location', '/accounts');
@@ -197,13 +194,13 @@ class CtrlAccount extends CtrlBase
     /**
      * Delete an account.
      *
-     * @param \Slim\Http\Request $request Request object.
-     * @param \Slim\Http\Response $response Response object.
+     * @param Request $request Request object.
+     * @param Response $response Response object.
      * @param array $args Request args.
      *
      * @return Response Response.
      */
-    public function delete(Request $request, Response $response, array $args)
+    public function delete(Request $request, Response $response, array $args): Response
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -229,12 +226,8 @@ class CtrlAccount extends CtrlBase
                     ],
                 ]
             );
-            if (json_decode($result->getBody()->getContents()) == 'true') {
-                $this->flash->addMessage('info', "Account '$accid' deleted.");
-            } else {
-                $this->flash->addMessage('error', "Account '$accid' delete failed, check the log for details.'");
-            }
-        } catch (\Exception $e) {
+            $this->flash->addMessage('info', "Account '$accid' deleted.");
+        } catch (Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
         }
         return $response->withStatus(302)->withHeader('Location', '/accounts');
