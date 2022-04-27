@@ -84,7 +84,7 @@ class CtrlOpenApi extends CtrlBase
             'accounts' => $this->userAccounts,
             'applications' => $this->userApplications,
             'appid' => $getParams['appid'],
-            'schema' => $schema,
+            'schema' => json_encode($schema),
             'roles' => $this->userRoles,
             'messages' => $this->flash->getMessages(),
         ]);
@@ -150,7 +150,7 @@ class CtrlOpenApi extends CtrlBase
             $result = json_decode($result->getBody()->getContents(), true);
             $schema = isset($result['result']) && (isset($result['data']) || $result['data'] === null) ? $result['data'] : $result;
             $schema = $schema ?? '[]';
-            $schema = $this->fixYamlEmptyObjectToEmptyArray($schema);
+            $schema = $this->fixYamlEmptyObjectToEmptyArray(json_encode($schema));
         }
 
         $menu = $this->getMenus();
@@ -175,7 +175,7 @@ class CtrlOpenApi extends CtrlBase
      */
     protected function fixYamlEmptyObjectToEmptyArray(string $json): string
     {
-        $emptyArrShouldBeObj = ['additionalProperties', 'content', 'items'];
+        $emptyArrShouldBeObj = ['additionalProperties', 'content', 'items', 'paths'];
         foreach ($emptyArrShouldBeObj as $key) {
             $json = str_replace("\"$key\":[]", "\"$key\":{}", $json);
         }
