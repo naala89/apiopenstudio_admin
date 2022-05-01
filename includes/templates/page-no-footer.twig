@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-gb" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ApiOpenStudio</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/css/materialize.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/apiopenstudio.min.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/js-yaml.min.js"></script>
+    <script src="/js/apiopenstudio.min.js"></script>
+  </head>
+
+  <body>
+    <script>
+      (function(window) {
+        // set APIOPENSTUDIO to the global object.
+        window.APIOPENSTUDIO = {};
+      })(window);
+      // Set up accounts, applications and appAccMap.
+      APIOPENSTUDIO.accounts = [];
+      {% if accounts is defined %}
+        var accounts = {{ accounts|json_encode|raw }};
+        var keys = Object.keys(accounts);
+        keys.forEach(key => {
+          APIOPENSTUDIO.accounts[key] = accounts[key];
+        })
+      {% endif %}
+      APIOPENSTUDIO.applications = [];
+      {% if applications is defined %}
+        var applications = {{ applications|json_encode|raw }};
+        var keys = Object.keys(applications);
+        keys.forEach(key => {
+          APIOPENSTUDIO.applications[key] = applications[key];
+        })
+      {% endif %}
+    </script>
+    <div class="container">
+      {% include 'partials/header.twig' %}
+      <main>
+        {% include 'partials/title.twig' %}
+        {% include 'partials/flash.twig' with {'messages': messages}  %}
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+    <script src="/js/materialize.min.js"></script>
+  </body>
+
+</html>

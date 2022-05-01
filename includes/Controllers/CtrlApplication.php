@@ -17,6 +17,7 @@
 
 namespace ApiOpenStudioAdmin\Controllers;
 
+use Exception;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -42,7 +43,7 @@ class CtrlApplication extends CtrlBase
     /**
      * Applications page.
      *
-     * @param \Slim\Http\Request $request Request object.
+     * @param Request $request Request object.
      * @param \Slim\Http\Response $response Response object.
      * @param array $args Request args.
      *
@@ -114,13 +115,13 @@ class CtrlApplication extends CtrlBase
     /**
      * Create an application.
      *
-     * @param \Slim\Http\Request $request Request object.
-     * @param \Slim\Http\Response $response Response object.
+     * @param Request $request Request object.
+     * @param Response $response Response object.
      * @param array $args Request args.
      *
      * @return Response Response.
      */
-    public function create(Request $request, Response $response, array $args)
+    public function create(Request $request, Response $response, array $args): Response
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -134,7 +135,7 @@ class CtrlApplication extends CtrlBase
         } else {
             // Create the new account.
             try {
-                $result = $this->apiCall(
+                $this->apiCall(
                     'post',
                     'application',
                     [
@@ -148,15 +149,8 @@ class CtrlApplication extends CtrlBase
                         ],
                     ]
                 );
-                if (json_decode($result->getBody()->getContents()) == 'true') {
-                    $this->flash->addMessage('info', "Application $appName created.");
-                } else {
-                    $this->flash->addMessage(
-                        'error',
-                        "Application $appName create failed, check the logs for details."
-                    );
-                }
-            } catch (\Exception $e) {
+                $this->flash->addMessage('info', "Application $appName created.");
+            } catch (Exception $e) {
                 $this->flash->addMessage('error', $e->getMessage());
             }
         }
@@ -167,13 +161,13 @@ class CtrlApplication extends CtrlBase
     /**
      * Edit an application.
      *
-     * @param \Slim\Http\Request $request Request object.
-     * @param \Slim\Http\Response $response Response object.
+     * @param Request $request Request object.
+     * @param Response $response Response object.
      * @param array $args Request args.
      *
      * @return Response Response.
      */
-    public function edit(Request $request, Response $response, array $args)
+    public function edit(Request $request, Response $response, array $args): Response
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -190,7 +184,7 @@ class CtrlApplication extends CtrlBase
             $this->flash->addMessage('error', 'Cannot edit application, Account ID, Application ID or name defined.');
         } else {
             try {
-                $result = $this->apiCall(
+                $this->apiCall(
                     'put',
                     "application/$appid/$accid/$name",
                     [
@@ -200,12 +194,8 @@ class CtrlApplication extends CtrlBase
                         ],
                     ]
                 );
-                if (json_decode($result->getBody()->getContents()) == 'true') {
-                    $this->flash->addMessage('info', "Application $appid edited.");
-                } else {
-                    $this->flash->addMessage('error', "Application $appid edit failed, check the logs for details.");
-                }
-            } catch (\Exception $e) {
+                $this->flash->addMessage('info', "Application $appid edited.");
+            } catch (Exception $e) {
                 $this->flash->addMessage('error', $e->getMessage());
             }
         }
@@ -216,13 +206,13 @@ class CtrlApplication extends CtrlBase
     /**
      * Delete an application.
      *
-     * @param \Slim\Http\Request $request Request object.
-     * @param \Slim\Http\Response $response Response object.
+     * @param Request $request Request object.
+     * @param Response $response Response object.
      * @param array $args Request args.
      *
      * @return Response Response.
      */
-    public function delete(Request $request, Response $response, array $args)
+    public function delete(Request $request, Response $response, array $args): Response
     {
         // Validate access.
         if (!$this->checkAccess()) {
@@ -234,8 +224,7 @@ class CtrlApplication extends CtrlBase
         if (empty($appid = $allPostVars['delete-app-appid'])) {
             $this->flash->addMessage('error', 'Cannot delete application, application ID not defined.');
         } else {
-            try {
-                $result = $this->apiCall(
+            try {$this->apiCall(
                     'delete',
                     "application/$appid",
                     [
@@ -245,12 +234,8 @@ class CtrlApplication extends CtrlBase
                         ],
                     ]
                 );
-                if (json_decode($result->getBody()->getContents()) == 'true') {
-                    $this->flash->addMessage('info', "Application $appid deleted.");
-                } else {
-                    $this->flash->addMessage('error', "Application $appid delete failed, check the logs for details.");
-                }
-            } catch (\Exception $e) {
+                $this->flash->addMessage('info', "Application $appid deleted.");
+            } catch (Exception $e) {
                 $this->flash->addMessage('error', $e->getMessage());
             }
         }

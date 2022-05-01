@@ -17,6 +17,7 @@
 
 namespace ApiOpenStudioAdmin\Controllers;
 
+use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -41,9 +42,9 @@ class CtrlHome extends CtrlBase
      * @param \Slim\Http\Response $response Response object.
      * @param array $args Request args.
      *
-     * @return \Psr\Http\Message\ResponseInterface|Response Response.
+     * @return ResponseInterface
      */
-    public function index(Request $request, Response $response, array $args)
+    public function index(Request $request, Response $response, array $args): ResponseInterface
     {
         // Validate access.
         if (!$this->checkAccess()) {

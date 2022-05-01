@@ -94,23 +94,18 @@ class CtrlResource extends CtrlBase
         // Fetch the resources.
         $resources = [];
         try {
-            $result = $this->apiCall(
-                'GET',
-                'resource',
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                    ],
-                    'query' => $query,
-                ]
-            );
+            $result = $this->apiCall('get', 'resource', [
+                'headers' => ['Authorization' => "Bearer {$_SESSION['token']}"],
+                'query' => $query,
+            ]);
             $resources = json_decode($result->getBody()->getContents(), true);
+            $resources = isset($resources['result']) && isset($resources['data']) ? $resources['data'] : $resources;
         } catch (Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
 
         // Pagination.
-        $page = isset($allParams['page']) ? $allParams['page'] : 1;
+        $page = $allParams['page'] ?? 1;
         $pages = ceil(count($resources) / $this->settings['admin']['pagination_step']);
         $sortedResources = array_slice(
             $resources,
@@ -122,7 +117,7 @@ class CtrlResource extends CtrlBase
         return $this->view->render($response, 'resources.twig', [
             'menu' => $menu,
             'params' => $allParams,
-            'resources' => $resources,
+            'resources' => $sortedResources,
             'page' => $page,
             'pages' => $pages,
             'accounts' => $this->userAccounts,
@@ -178,7 +173,7 @@ class CtrlResource extends CtrlBase
     {
         // Validate access.
         if (!$this->checkAccess()) {
-            $this->flash->addMessage('error', 'Create a resource: access denied');
+            $this->flash->addMessage('error', 'Edit a resource: access denied');
             return $response->withStatus(302)->withHeader('Location', '/');
         }
 
@@ -187,24 +182,21 @@ class CtrlResource extends CtrlBase
 
         if (empty($args['resource'])) {
             try {
-                $result = $this->apiCall(
-                    'get',
-                    'resource',
-                    [
-                        'headers' => [
-                            'Authorization' => "Bearer " . $_SESSION['token'],
-                            'Accept' => 'application/json',
-                        ],
-                        'query' => ['resid' => $resid],
-                    ]
-                );
+                $result = $this->apiCall('get', 'resource', [
+                    'headers' => [
+                        'Authorization' => "Bearer " . $_SESSION['token'],
+                        'Accept' => 'application/json',
+                    ],
+                    'query' => ['resid' => $resid],
+                ]);
                 $resource = json_decode($result->getBody()->getContents(), true);
+                $resource = isset($resource['result']) && isset($resource['data']) ? $resource['data'] : $resource;
                 if (!empty($resource)) {
                     $resource = $resource[0];
                 } else {
                     $this->flash->addMessageNow('error', 'resource not found.');
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->flash->addMessageNow('error', $e->getMessage());
             }
         } else {
@@ -215,13 +207,12 @@ class CtrlResource extends CtrlBase
         $applications = $this->userApplications;
         $processors = $this->processorDetails();
 
-        $obj = json_decode($resource['meta'], true);
-        $resource['meta'] = [];
-        foreach (self::META_SECTIONS as $item) {
-            if (isset($obj[$item])) {
-                $resource['meta'][$item] = Yaml::dump($obj[$item], 500, 2, Yaml::PARSE_OBJECT);
+        foreach (self::META_SECTIONS as $metaSection) {
+            if (isset($resource['meta'][$metaSection])) {
+                $resource['meta'][$metaSection] = Yaml::dump($resource['meta'][$metaSection], 500, 2, Yaml::PARSE_OBJECT);
             }
         }
+
         return $this->view->render($response, 'resource.twig', [
             'operation' => 'edit',
             'menu' => $menu,
@@ -287,53 +278,45 @@ class CtrlResource extends CtrlBase
 
         if (!empty($allPostVars['resid'])) {
             try {
-                $this->apiCall(
-                    'put',
-                    'resource/' . $allPostVars['resid'],
-                    [
-                        'headers' => [
-                            'Authorization' => "Bearer " . $_SESSION['token'],
-                            'Accept' => 'application/json',
-                        ],
-                        'json' => [
-                            'name' => $allPostVars['name'],
-                            'description' => $allPostVars['description'],
-                            'appid' => $allPostVars['appid'],
-                            'method' => $allPostVars['method'],
-                            'uri' => $allPostVars['uri'],
-                            'ttl' => $allPostVars['ttl'],
-                            'metadata' => $meta,
-                        ],
-                    ]
-                );
+                $this->apiCall('put', 'resource/' . $allPostVars['resid'], [
+                    'headers' => [
+                        'Authorization' => "Bearer " . $_SESSION['token'],
+                        'Accept' => 'application/json',
+                    ],
+                    'json' => [
+                        'name' => $allPostVars['name'],
+                        'description' => $allPostVars['description'],
+                        'appid' => $allPostVars['appid'],
+                        'method' => $allPostVars['method'],
+                        'uri' => $allPostVars['uri'],
+                        'ttl' => $allPostVars['ttl'],
+                        'metadata' => $meta,
+                    ],
+                ]);
                 $this->flash->addMessageNow('info', 'Resource ' . $allPostVars['resid'] . ' successfully edited.');
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->flash->addMessageNow('error', $e->getMessage());
             }
         } else {
             try {
-                $this->apiCall(
-                    'post',
-                    'resource',
-                    [
-                        'headers' => [
-                            'Authorization' => "Bearer " . $_SESSION['token'],
-                            'Accept' => 'application/json',
-                        ],
-                        'form_params' => [
-                            'name' => $allPostVars['name'],
-                            'description' => $allPostVars['description'],
-                            'appid' => $allPostVars['appid'],
-                            'method' => $allPostVars['method'],
-                            'uri' => $allPostVars['uri'],
-                            'ttl' => $allPostVars['ttl'],
-                            'format' => $allPostVars['format'],
-                            'metadata' => $meta,
-                        ],
-                    ]
-                );
+                $this->apiCall('post', 'resource', [
+                    'headers' => [
+                        'Authorization' => "Bearer " . $_SESSION['token'],
+                        'Accept' => 'application/json',
+                    ],
+                    'form_params' => [
+                        'name' => $allPostVars['name'],
+                        'description' => $allPostVars['description'],
+                        'appid' => $allPostVars['appid'],
+                        'method' => $allPostVars['method'],
+                        'uri' => $allPostVars['uri'],
+                        'ttl' => $allPostVars['ttl'],
+                        'format' => $allPostVars['format'],
+                        'metadata' => $meta,
+                    ],
+                ]);
                 $this->flash->addMessageNow('info', 'Resource successfully created.');
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->flash->addMessageNow('error', $e->getMessage());
             }
         }
@@ -372,23 +355,20 @@ class CtrlResource extends CtrlBase
         $resid = $allPostVars['resid'];
 
         try {
-            $result = $this->apiCall(
-                'delete',
-                "resource/$resid",
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                        'Accept' => 'application/json',
-                    ],
-                ]
-            );
+            $result = $this->apiCall('delete', "resource/$resid", [
+                'headers' => [
+                    'Authorization' => "Bearer " . $_SESSION['token'],
+                    'Accept' => 'application/json',
+                ],
+            ]);
             $result = json_decode($result->getBody()->getContents(), true);
+            $result = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
             if ($result == 'true') {
                 $this->flash->addMessage('info', 'Resource successfully deleted.');
             } else {
                 $this->flash->addMessage('error', 'Resource failed to delete, please check the logs.');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
             return $response->withStatus(302)->withHeader('Location', '/resources');
         }
@@ -409,7 +389,7 @@ class CtrlResource extends CtrlBase
     {
         // Validate access.
         if (!$this->checkAccess()) {
-            $this->flash->addMessage('error', 'Delete a resource: access denied');
+            $this->flash->addMessage('error', 'Download a resource: access denied');
             return $response->withStatus(302)->withHeader('Location', '/');
         }
 
@@ -423,16 +403,11 @@ class CtrlResource extends CtrlBase
         }
 
         try {
-            $result = $this->apiCall(
-                'get',
-                "resource/export/{$args['format']}/{$args['resid']}",
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token']
-                    ]
-                ]
-            );
-        } catch (\Exception $e) {
+            $result = $this->apiCall('get', "resource/export/{$args['format']}/{$args['resid']}", [
+                'headers' => ['Authorization' => "Bearer {$_SESSION['token']}"],
+            ]);
+            $result = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
+        } catch (Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
             return $response->withStatus(302)->withHeader('Location', '/resources');
         }
@@ -456,7 +431,7 @@ class CtrlResource extends CtrlBase
     {
         // Validate access.
         if (!$this->checkAccess()) {
-            $this->flash->addMessage('error', 'Delete a resource: access denied');
+            $this->flash->addMessage('error', 'Import a resource: access denied');
             return $response->withStatus(302)->withHeader('Location', '/');
         }
 
@@ -467,23 +442,19 @@ class CtrlResource extends CtrlBase
         if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
             try {
                 $filename = $this->moveUploadedFile($directory, $uploadedFile);
-                $this->apiCall(
-                    'post',
-                    'resource/import',
-                    [
-                        'headers' => [
-                            'Authorization' => "Bearer " . $_SESSION['token'],
-                            'Accept' => 'application/json',
+                $this->apiCall('post', 'resource/import', [
+                    'headers' => [
+                        'Authorization' => "Bearer " . $_SESSION['token'],
+                        'Accept' => 'application/json',
+                    ],
+                    'multipart' => [
+                        [
+                            'name' => 'resource_file',
+                            'contents' => fopen($directory . $filename, 'r'),
                         ],
-                        'multipart' => [
-                            [
-                                'name' => 'resource_file',
-                                'contents' => fopen($directory . $filename, 'r'),
-                            ],
-                        ],
-                    ]
-                );
-            } catch (\Exception $e) {
+                    ],
+                ]);
+            } catch (Exception $e) {
                 $this->flash->addMessage('error', $e->getMessage());
             }
         } else {
@@ -555,18 +526,15 @@ class CtrlResource extends CtrlBase
     {
         $processors = [];
         try {
-            $result = $this->apiCall(
-                'get',
-                'processors/all',
-                [
-                    'headers' => [
-                        'Authorization' => "Bearer " . $_SESSION['token'],
-                        'Accept' => 'application/json',
-                    ],
-                ]
-            );
+            $result = $this->apiCall('get', 'processors/all', [
+                'headers' => [
+                    'Authorization' => "Bearer {$_SESSION['token']}",
+                    'Accept' => 'application/json',
+                ],
+            ]);
             $processors = json_decode($result->getBody()->getContents(), true);
-        } catch (\Exception $e) {
+            $processors = isset($processors['result']) && isset($processors['data']) ? $processors['data'] : $processors;
+        } catch (Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
 

@@ -53,28 +53,28 @@ class CtrlBase
      *
      * @var Twig
      */
-    protected $view;
+    protected Twig $view;
 
     /**
      * Flash messages object.
      *
      * @var \Slim\Flash\Messages.
      */
-    protected $flash;
+    protected Messages $flash;
 
     /**
      * Menu items available to the user.
      *
      * @var array.
      */
-    protected $menu;
+    protected array $menu;
 
     /**
      * Array of all roles the user has.
      *
      * @var array
      */
-    protected $allRoles = [];
+    protected array $allRoles = [];
 
     /**
      * Array of the user access rights.
@@ -89,28 +89,28 @@ class CtrlBase
      *      ]
      * ]
      */
-    protected $userAccessRights = [];
+    protected array $userAccessRights = [];
 
     /**
      * Array of oles the user has.
      *
      * @var array
      */
-    protected $userRoles = [];
+    protected array $userRoles = [];
 
     /**
      * Array of accounts the user has access to.
      *
      * @var array
      */
-    protected $userAccounts = [];
+    protected array $userAccounts = [];
 
     /**
      * Array of applications the user has access to.
      *
      * @var array
      */
-    protected $userApplications = [];
+    protected array $userApplications = [];
 
     /**
      * Base constructor.
@@ -178,7 +178,7 @@ class CtrlBase
      */
     protected function apiCallUserRoles(int $uid): array
     {
-        $userRoles = [];
+        $result = [];
         try {
             $result = $this->apiCall('GET', 'user/role', [
                 'headers' => [
@@ -187,11 +187,14 @@ class CtrlBase
                 ],
                 'query' => ['uid' => $uid],
             ]);
-            $userRoles = json_decode($result->getBody()->getContents(), true);
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
         } catch (Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
-        return $userRoles;
+        return $result;
     }
 
     /**
@@ -203,17 +206,21 @@ class CtrlBase
     {
         $userRoles = [];
         try {
-            $result = $this->apiCall('GET', 'role/all', [
+            $result = $this->apiCall('GET', 'role', [
                 'headers' => [
                     'Authorization' => "Bearer " . $_SESSION['token'],
                     'Accept' => 'application/json',
                 ],
             ]);
             $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
             foreach ($result as $role) {
                 $userRoles[$role['rid']] = $role['name'];
             }
         } catch (Exception $e) {
+            $this->flash->addMessageNow('error', $e->getMessage());
         }
         return $userRoles;
     }
@@ -227,7 +234,7 @@ class CtrlBase
      */
     protected function apiCallAccountAll(array $params = []): array
     {
-        $accounts = $query = [];
+        $result = $query = [];
         foreach ($params as $key => $value) {
             $query[$key] = $value;
         }
@@ -241,12 +248,15 @@ class CtrlBase
                 ],
                 'query' => $query,
             ]);
-            $accounts = json_decode($result->getBody()->getContents(), true);
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
         } catch (Exception $e) {
-            $this->flash->addMessageNow('error', $e->getMessage());
+            $this->flash->addMessageNow('data', $e->getMessage());
         }
 
-        return $accounts;
+        return $result;
     }
 
     /**
@@ -263,7 +273,7 @@ class CtrlBase
         }
         $query['order_by'] = empty($query['order_by']) ? 'name' : $query['order_by'];
 
-        $applications = [];
+        $result = [];
         try {
             $result = $this->apiCall('GET', 'application', [
                 'headers' => [
@@ -272,11 +282,15 @@ class CtrlBase
                 ],
                 'query' => $query,
             ]);
-            $applications = json_decode($result->getBody()->getContents(), true);
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
         } catch (Exception $e) {
+            $this->flash->addMessageNow('error', $e->getMessage());
         }
 
-        return $applications;
+        return $result;
     }
 
     /**
@@ -321,7 +335,7 @@ class CtrlBase
     {
         $roles = [];
 
-        foreach ($this->userAccessRights as $accid => $appids) {
+        foreach ($this->userAccessRights as $appids) {
             foreach ($appids as $rids) {
                 foreach ($rids as $rid) {
                     $roles[$rid] = $this->allRoles[$rid];
@@ -341,9 +355,9 @@ class CtrlBase
      * Example:
      *   [<accid> => <account_name>]
      */
-    private function getAccounts(array $params = [])
+    private function getAccounts(array $params = []): array
     {
-        $allAccounts = $query = [];
+        $result = $query = [];
         foreach ($params as $key => $value) {
             $query[$key] = $value;
         }
@@ -356,11 +370,15 @@ class CtrlBase
                 ],
                 'query' => $query,
             ]);
-            $allAccounts = json_decode($result->getBody()->getContents(), true);
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
         } catch (Exception $e) {
+            $this->flash->addMessageNow('error', $e->getMessage());
         }
 
-        return $allAccounts;
+        return $result;
     }
 
     /**
@@ -377,7 +395,7 @@ class CtrlBase
      *       ],
      *     ]
      */
-    protected function getApplications(array $params = [])
+    protected function getApplications(array $params = []): array
     {
         $allApplications = $this->apiCallApplicationAll($params);
 
@@ -410,7 +428,7 @@ class CtrlBase
      *
      * @return boolean Access validated.
      */
-    protected function checkAccess()
+    protected function checkAccess(): bool
     {
         if (empty($this->userAccessRights) || empty($this->allRoles)) {
             $this->allRoles = $this->apiCallRolesAll();
@@ -423,7 +441,7 @@ class CtrlBase
             return true;
         }
 
-        foreach ($this->userRoles as $rid => $name) {
+        foreach ($this->userRoles as $name) {
             if (in_array($name, $this->permittedRoles)) {
                 return true;
             }
@@ -447,6 +465,7 @@ class CtrlBase
         } else {
             $menus += [
                 'Home' => '/',
+                'Open Api' => '/open-api',
             ];
             if (in_array('Administrator', $this->userRoles)) {
                 $menus += [
@@ -484,6 +503,11 @@ class CtrlBase
                     'Resources' => '/resources',
                     'Vars' => '/vars',
                 ];
+                $menus['Open Api'] = [
+                    'Docs' => '/open-api',
+                    'Editor' => '/open-api/edit',
+                    'Import' => '/open-api/import',
+                ];
             }
             $uid = isset($_SESSION['uid']) ? $_SESSION['uid'] : '';
             $menus += [
@@ -502,11 +526,12 @@ class CtrlBase
      *
      * @return string
      */
-    protected function getErrorMessage($e)
+    protected function getErrorMessage($e): string
     {
+        $message = '';
         if ($e->hasResponse()) {
             $responseObject = json_decode($e->getResponse()->getBody()->getContents());
-            $message = $responseObject->error->message;
+            $message = $responseObject->data->message;
         }
         if (empty($message)) {
             $message = $e->getMessage();

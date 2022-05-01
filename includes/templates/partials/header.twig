@@ -13,7 +13,16 @@
             <ul class="right hide-on-med-and-down">
                 {% for key,value in menu %}
                     <li>
-                        <a href="{{ value }}">{{ key }}</a>
+                        {% if value is iterable %}
+                            <a class="dropdown-trigger" href="#!" data-target="dropdown{{ key }}">{{ key }}</a>
+                            <ul id='dropdown{{ key }}' class='dropdown-content'>
+                                {% for subkey,subvalue in value %}
+                                    <li><a href="{{ subvalue }}">{{ subkey }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <a href="{{ value }}">{{ key }}</a>
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>

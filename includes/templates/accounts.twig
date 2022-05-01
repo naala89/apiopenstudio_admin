@@ -43,7 +43,7 @@
   {% for account in accounts %}
     <div class="row hoverable">
       <div class="col s10 col-height valign-wrapper">
-        <a href="/applications?account_filter={{ account.accid }}" title="View applications under this account.">{{ account.name }}</a>
+        <a href="/applications?account_id={{ account.accid }}" title="View applications under this account.">{{ account.name }}</a>
       </div>
       <div class="col s2 col-height valign-wrapper">
         {% if isAdmin == true and account.accid != 1 %}
