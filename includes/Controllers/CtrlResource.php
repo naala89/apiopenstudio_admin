@@ -403,16 +403,23 @@ class CtrlResource extends CtrlBase
         }
 
         try {
-            $result = $this->apiCall('get', "resource/export/{$args['format']}/{$args['resid']}", [
-                'headers' => ['Authorization' => "Bearer {$_SESSION['token']}"],
-            ]);
-            $result = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
+            $result = $this->apiCall(
+                'get',
+                "resource/export/{$args['format']}/{$args['resid']}",
+                [
+                    'headers' => ['Authorization' => "Bearer {$_SESSION['token']}"],
+                ]
+            );
         } catch (Exception $e) {
             $this->flash->addMessage('error', $e->getMessage());
             return $response->withStatus(302)->withHeader('Location', '/resources');
         }
 
-        echo trim((string) $result->getBody(), '"');
+        $result = $result->getBody()->getContents();
+        $test = json_decode($result, true);
+        $result = is_array($test) && isset($test['result']) && isset($test['data']) ? $test['data'] : $result;
+        $result = is_array($result) ? json_encode($result) : $result;
+        echo trim($result, '"');
         return $response->withHeader('Content-Description', 'File Transfer')
             ->withHeader('Content-Type', 'application/octet-stream')
             ->withHeader('Content-Disposition', 'attachment;filename="apiopenstudio.' . $args['format'] . '"');
