@@ -35,6 +35,8 @@ class CtrlVars extends CtrlBase
      * @var array
      */
     protected array $permittedRoles = [
+        'Administrator',
+        'Account manager',
         'Application manager',
         'Developer',
     ];
@@ -58,28 +60,17 @@ class CtrlVars extends CtrlBase
 
         $menu = $this->getMenus();
         $allParams = $request->getParams();
-        $allParams['filter_by_account'] = !empty($allParams['filter_by_application'])
-            ? ''
-            : $allParams['filter_by_account'];
-
         $query = [];
-        if (!empty($allParams['filter_by_application'])) {
-            $query['appid'] = $allParams['filter_by_application'];
-        }
-        if (!empty($allParams['keyword'])) {
-            $query['keyword'] = $allParams['keyword'];
-        }
-        if (!empty($allParams['order_by']) && $allParams['order_by'] != 'account') {
-            $query['order_by'] = $allParams['order_by'];
-        }
-        if (!empty($allParams['direction'])) {
-            $query['direction'] = $allParams['direction'];
-        }
+        $query['appid'] = !empty($allParams['filter_by_application']) ? $allParams['filter_by_application'] : '';
+        $query['accid'] = !empty($allParams['filter_by_account']) ? $allParams['filter_by_account'] : '';
+        $query['keyword'] = !empty($allParams['keyword']) ? $allParams['keyword'] : '';
+        $query['order_by'] = !empty($allParams['order_by']) ? $allParams['order_by'] : '';
+        $query['direction'] = !empty($allParams['direction']) ? $allParams['direction'] : '';
 
         try {
             $result = $this->apiCall('get', 'var_store', [
                 'headers' => [
-                    'Authorization' => "Bearer " . $_SESSION['token'],
+                    'Authorization' => "Bearer {$_SESSION['token']}",
                     'Accept' => 'application/json',
                 ],
                 'query' => $query,
@@ -88,62 +79,13 @@ class CtrlVars extends CtrlBase
             $vars = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
         } catch (\Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
-        }
-
-        // Filter by account.
-        if (!empty($allParams['filter_by_account'])) {
-            $filterApps = [];
-            foreach ($this->userAccounts as $userAccount) {
-                if ($userAccount['accid'] == $allParams['filter_by_account']) {
-                    foreach ($this->userApplications as $userApplication) {
-                        if ($userApplication['accid'] == $userAccount['accid']) {
-                            $filterApps[] = $userApplication['appid'];
-                        }
-                    }
-                }
-            }
-            foreach ($vars as $index => $var) {
-                if (!in_array($var['appid'], $filterApps)) {
-                    unset($vars[$index]);
-                }
-            }
-        }
-
-        $sortedVars = [];
-        if ($allParams['order_by'] == 'account') {
-            // Sort by account name.
-            foreach ($this->userAccounts as $userAccount) {
-                foreach ($this->userApplications as $userApplication) {
-                    foreach ($vars as $index => $var) {
-                        if (
-                            $userAccount['accid'] == $userApplication['accid']
-                                && $userApplication['appid'] == $var['appid']
-                        ) {
-                            $sortedVars[] = $var;
-                            unset($vars[$index]);
-                        }
-                    }
-                }
-            }
-        } elseif ($allParams['order_by'] == 'application') {
-            // Sort by application name.
-            foreach ($this->userApplications as $userApplication) {
-                foreach ($vars as $index => $resource) {
-                    if ($userApplication['appid'] == $var['appid']) {
-                        $sortedVars[] = $var;
-                        unset($vars[$index]);
-                    }
-                }
-            }
-        } else {
-            // All other sorts.
-            $sortedVars = $vars;
+            $vars = [];
         }
 
         // Pagination.
         $page = isset($params['page']) ? $allParams['page'] : 1;
         $pages = ceil(count($vars) / $this->settings['admin']['pagination_step']);
-        $sortedVars = array_slice(
+        $vars = array_slice(
             $vars,
             ($page - 1) * $this->settings['admin']['pagination_step'],
             $this->settings['admin']['pagination_step'],
@@ -152,7 +94,7 @@ class CtrlVars extends CtrlBase
 
         return $this->view->render($response, 'vars.twig', [
             'menu' => $menu,
-            'vars' => $sortedVars,
+            'vars' => $vars,
             'applications' => $this->userApplications,
             'accounts' => $this->userAccounts,
             'params' => $allParams,
@@ -182,15 +124,10 @@ class CtrlVars extends CtrlBase
         $menu = $this->getMenus();
         $allPostVars = $request->getParams();
         $params = [];
-        if (isset($allPostVars['create-var-appid'])) {
-            $params['appid'] = $allPostVars['create-var-appid'];
-        }
-        if (isset($allPostVars['create-var-key'])) {
-            $params['key'] = $allPostVars['create-var-key'];
-        }
-        if (isset($allPostVars['create-var-val'])) {
-            $params['val'] = $allPostVars['create-var-val'];
-        }
+        $params['appid'] = !empty($allPostVars['create-var-appid']) ? $allPostVars['create-var-appid'] : null;
+        $params['accid'] = !empty($allPostVars['create-var-accid']) ? $allPostVars['create-var-accid'] : null;
+        $params['key'] = !empty($allPostVars['create-var-key']) ? $allPostVars['create-var-key'] : null;
+        $params['val'] = !empty($allPostVars['create-var-val']) ? $allPostVars['create-var-val'] : null;
 
         try {
             $this->apiCall('post', 'var_store', [

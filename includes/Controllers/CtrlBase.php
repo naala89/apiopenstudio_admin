@@ -467,6 +467,7 @@ class CtrlBase
                 $menus += [
                     'Accounts' => '/accounts',
                     'Applications' => '/applications',
+                    'Vars' => '/vars',
                     'Users' => '/users',
                     'Invites' => '/invites',
                     'User Roles' => '/user/roles',
@@ -477,6 +478,7 @@ class CtrlBase
                 $menus += [
                     'Accounts' => '/accounts',
                     'Applications' => '/applications',
+                    'Vars' => '/vars',
                     'Users' => '/users',
                     'Invites' => '/invites',
                     'User Roles' => '/user/roles',
@@ -487,6 +489,7 @@ class CtrlBase
                 $menus += [
                     'Accounts' => '/accounts',
                     'Applications' => '/applications',
+                    'Vars' => '/vars',
                     'Users' => '/users',
                     'Invites' => '/invites',
                     'User Roles' => '/user/roles',
