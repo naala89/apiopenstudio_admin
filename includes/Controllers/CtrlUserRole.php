@@ -125,32 +125,27 @@ class CtrlUserRole extends CtrlBase
         $token = $_SESSION['token'];
 
         try {
+            $payload = [
+                'uid' => $allPostVars['uid'],
+                'rid' => $allPostVars['rid'],
+            ];
+            if (!empty($allPostVars['accid'])) {
+                $payload['accid'] = $allPostVars['accid'];
+            }
+            if (!empty($allPostVars['appid'])) {
+                $payload['appid'] = $allPostVars['appid'];
+            }
             $this->apiCall('post', 'user/role', [
                 'headers' => [
                     'Authorization' => "Bearer $token",
                 ],
-                'form_params' => [
-                    'uid' => $allPostVars['uid'],
-                    'accid' => $allPostVars['accid'],
-                    'appid' => $allPostVars['appid'],
-                    'rid' => $allPostVars['rid'],
-                ],
+                'form_params' => $payload,
             ]);
+            $this->flash->addMessage('info', 'User role created.');
         } catch (Exception $e) {
-
-            $result = $e->getResponse();
-            $this->flash->addMessage('error', $this->getErrorMessage($e));
-            switch ($result->getStatusCode()) {
-                case 401:
-                    return $response->withStatus(302)->withHeader('Location', '/login');
-                break;
-                default:
-                    return $response->withStatus(302)->withHeader('Location', '/user/roles');
-                break;
-            }
+            $this->flash->addMessage('error', $e->getMessage());
         }
 
-        $this->flash->addMessage('info', 'User role created.');
         return $response->withStatus(302)->withHeader('Location', '/user/roles');
     }
 
@@ -184,20 +179,11 @@ class CtrlUserRole extends CtrlBase
             $this->apiCall('delete', 'user/role/' . $urid, [
                 'headers' => ['Authorization' => "Bearer $token"],
             ]);
+            $this->flash->addMessage('info', 'User role deleted.');
         } catch (Exception $e) {
-            $result = $e->getResponse();
-            $this->flash->addMessage('error', $this->getErrorMessage($e));
-            switch ($result->getStatusCode()) {
-                case 401:
-                    return $response->withStatus(302)->withHeader('Location', '/login');
-                    break;
-                default:
-                    return $response->withStatus(302)->withHeader('Location', '/user/roles');
-                    break;
-            }
+            $this->flash->addMessage('error', $e->getMessage());
         }
 
-        $this->flash->addMessage('info', 'User role deleted.');
         return $response->withStatus(302)->withHeader('Location', '/user/roles');
     }
 }

@@ -78,13 +78,13 @@
         <div class="row hoverable">
             <div class="col col-height s2 valign-wrapper">
                 {% set accid, accname = '', '' %}
-                {% for account in accounts %}
-                    {% for application in applications %}
-                        {% if var.appid == application.appid and account.accid == application.accid %}
+                {% if accid == '' %}
+                    {% for account in accounts %}
+                        {% if var.accid == account.accid %}
                             {% set accid, accname = account.accid, account.name %}
                         {%  endif %}
                     {% endfor %}
-                {% endfor %}
+                {% endif %}
                 <a href="/vars?filter_by_account={{ accid }}">{{ accname }}</a>
             </div>
             <div class="col col-height s2 valign-wrapper">

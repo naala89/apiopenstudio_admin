@@ -151,20 +151,16 @@ class CtrlBase
             switch ($result->getStatusCode()) {
                 case 401:
                     throw new Exception('Unauthorised');
-                    break;
                 default:
                     throw new Exception($this->getErrorMessage($e));
-                    break;
             }
         } catch (GuzzleException $e) {
             $result = $e->getResponse();
             switch ($result->getStatusCode()) {
                 case 401:
                     throw new Exception('Unauthorised');
-                    break;
                 default:
                     throw new Exception($this->getErrorMessage($e));
-                    break;
             }
         }
     }
@@ -471,6 +467,7 @@ class CtrlBase
                 $menus += [
                     'Accounts' => '/accounts',
                     'Applications' => '/applications',
+                    'Vars' => '/vars',
                     'Users' => '/users',
                     'Invites' => '/invites',
                     'User Roles' => '/user/roles',
@@ -481,6 +478,7 @@ class CtrlBase
                 $menus += [
                     'Accounts' => '/accounts',
                     'Applications' => '/applications',
+                    'Vars' => '/vars',
                     'Users' => '/users',
                     'Invites' => '/invites',
                     'User Roles' => '/user/roles',
@@ -491,6 +489,7 @@ class CtrlBase
                 $menus += [
                     'Accounts' => '/accounts',
                     'Applications' => '/applications',
+                    'Vars' => '/vars',
                     'Users' => '/users',
                     'Invites' => '/invites',
                     'User Roles' => '/user/roles',
