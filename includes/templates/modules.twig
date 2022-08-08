@@ -1,0 +1,70 @@
+{% extends "page.twig" %}
+
+{% set title="Modules" %}
+
+{% block content %}
+    <div class="row">
+        <p>Manage your 3rd party plugins and processors here.</p>
+    </div>
+
+    <div class="row table-header">
+        <h6 class="col col-height s3 valign-wrapper">Title</h6>
+        <h6 class="col col-height s4 valign-wrapper">Machine name</h6>
+        <h6 class="col col-height s2 valign-wrapper">Version</h6>
+        <h6 class="col col-height s1 valign-wrapper">Install</h6>
+        <h6 class="col col-height s1 valign-wrapper">Uninstall</h6>
+        <h6 class="col col-height s1 valign-wrapper">Update</h6>
+    </div>
+    {% for machine_name, details in modules %}
+        <div class="row hoverable">
+            <div class="col col-height s3 valign-wrapper" title="{{ details.details.description }}">
+                {{ details.details.name }}
+            </div>
+            <div class="col col-height s4 valign-wrapper" title="{{ details.details.description }}">
+                {{ machine_name }}
+            </div>
+            <div class="col col-height s2 valign-wrapper">
+                {% if details.installed != 0 %}
+                    {{ details.installed }}
+                {% else %}
+                    -
+                {% endif %}
+            </div>
+            <div class="col col-height s1 valign-wrapper">
+                {% if details.installed == 0 and details.installable == 1 %}
+                    <a class="btn-floating btn-medium add">
+                        <i class="material-icons modal-trigger modal-module-install-trigger" machine_name="{{ machine_name }}" module_name="{{ details.details.name }}" title="Install {{ details.details.name }}.">add</i>
+                    </a>
+                {% endif %}
+            </div>
+            <div class="col col-height s1 valign-wrapper">
+                {% if details.installed != 0 %}
+                    <a class="btn-floating btn-medium remove">
+                        <i class="material-icons modal-trigger modal-module-uninstall-trigger" machine_name="{{ machine_name }}" module_name="{{ details.details.name }}" title="Uninstall {{ details.details.name }}.">remove</i>
+                    </a>
+                {% endif %}
+            </div>
+            <div class="col col-height s1 valign-wrapper">
+                {% if details.update_functions|length > 0 %}
+                    {% set update_functions = "Update " ~ details.details.name ~ "\n" %}
+                    {% for update_function in details.update_functions %}
+                        {% set update_functions = update_functions ~ update_function ~ "()\n" %}
+                    {% endfor %}
+                    <a class="btn-floating btn-medium replay">
+                        <i class="material-icons modal-trigger modal-module-update-trigger" machine_name="{{ machine_name }}" module_name="{{ details.details.name }}" title="Update {{ update_functions }}.">replay</i>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+
+    {% set url = "/modules" %}
+    {% include 'partials/pagination.twig' %}
+
+    {% include 'modals/module_install.twig' %}
+
+    {% include 'modals/module_uninstall.twig' %}
+
+    {% include 'modals/module_update.twig' %}
+
+{% endblock %}
