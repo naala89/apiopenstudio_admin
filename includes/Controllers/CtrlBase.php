@@ -472,6 +472,7 @@ class CtrlBase
                     'Invites' => '/invites',
                     'User Roles' => '/user/roles',
                     'Roles' => '/roles',
+                    'Modules' => '/modules',
                 ];
             }
             if (in_array('Account manager', $this->userRoles)) {
@@ -483,6 +484,7 @@ class CtrlBase
                     'Invites' => '/invites',
                     'User Roles' => '/user/roles',
                     'Roles' => '/roles',
+                    'Modules' => '/modules',
                 ];
             }
             if (in_array('Application manager', $this->userRoles)) {
@@ -493,6 +495,7 @@ class CtrlBase
                     'Users' => '/users',
                     'Invites' => '/invites',
                     'User Roles' => '/user/roles',
+                    'Modules' => '/modules',
                 ];
             }
             if (in_array('Developer', $this->userRoles)) {
@@ -501,6 +504,7 @@ class CtrlBase
                     'Applications' => '/applications',
                     'Resources' => '/resources',
                     'Vars' => '/vars',
+                    'Modules' => '/modules',
                 ];
                 $menus['Open Api'] = [
                     'Docs' => '/open-api',
@@ -519,7 +523,7 @@ class CtrlBase
     }
 
     /**
-     * Get an error message from a API call exception.
+     * Get an error message from an API call exception.
      *
      * @param mixed $e Exception.
      *

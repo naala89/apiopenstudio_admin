@@ -157,3 +157,15 @@ $app->get('/open-api/import', 'CtrlOpenApi:import')
     ->add(new Authentication($container, $settings, '/login'));
 $app->post('/open-api/import', 'CtrlOpenApi:import')
     ->add(new Authentication($container, $settings, '/login'));
+
+/**
+ * Modules
+ */
+$app->get('/modules', 'CtrlModules:index')
+    ->add(new Authentication($container, $settings, '/modules'));
+$app->post('/module/install', 'CtrlModules:install')
+    ->add(new Authentication($container, $settings, '/modules'));
+$app->post('/module/uninstall', 'CtrlModules:uninstall')
+    ->add(new Authentication($container, $settings, '/modules'));
+$app->post('/module/update', 'CtrlModules:update')
+    ->add(new Authentication($container, $settings, '/modules'));
