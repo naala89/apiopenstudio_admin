@@ -47,6 +47,7 @@ class CtrlResource extends CtrlBase
     private const META_SECTIONS = [
         'security',
         'process',
+        'fragments',
         'output',
     ];
 
@@ -515,6 +516,7 @@ class CtrlResource extends CtrlBase
             'meta' => [
                 'security' =>  $allPostVars['security'],
                 'process' =>  $allPostVars['process'],
+                'fragments' =>  $allPostVars['fragments'],
                 'output' =>  $allPostVars['output'],
             ]
         ];
