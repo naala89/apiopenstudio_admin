@@ -17,18 +17,6 @@ use ApiOpenStudioAdmin\Middleware\Authentication;
 $container = $app->getContainer();
 
 /**
- * Applications.
- */
-$app->get('/applications', 'CtrlApplication:index')
-    ->add(new Authentication($container, $settings, '/login'));
-$app->post('/application/create', 'CtrlApplication:create')
-    ->add(new Authentication($container, $settings, '/login'));
-$app->post('/application/edit', 'CtrlApplication:edit')
-    ->add(new Authentication($container, $settings, '/login'));
-$app->post('/application/delete', 'CtrlApplication:delete')
-    ->add(new Authentication($container, $settings, '/login'));
-
-/**
  * Accounts.
  */
 $app->get('/accounts', 'CtrlAccount:index')
@@ -38,6 +26,18 @@ $app->post('/account/create', 'CtrlAccount:create')
 $app->post('/account/edit', 'CtrlAccount:edit')
     ->add(new Authentication($container, $settings, '/login'));
 $app->post('/account/delete', 'CtrlAccount:delete')
+    ->add(new Authentication($container, $settings, '/login'));
+
+/**
+ * Applications.
+ */
+$app->get('/applications', 'CtrlApplication:index')
+    ->add(new Authentication($container, $settings, '/login'));
+$app->post('/application/create', 'CtrlApplication:create')
+    ->add(new Authentication($container, $settings, '/login'));
+$app->post('/application/edit', 'CtrlApplication:edit')
+    ->add(new Authentication($container, $settings, '/login'));
+$app->post('/application/delete', 'CtrlApplication:delete')
     ->add(new Authentication($container, $settings, '/login'));
 
 /**
@@ -73,6 +73,34 @@ $app->get('/password/reset', 'CtrlLogin:passwordReset');
 $app->post('/password/reset', 'CtrlLogin:passwordReset');
 $app->get('/password/set/{token}', 'CtrlLogin:setPassword');
 $app->post('/password/set', 'CtrlLogin:setPassword');
+
+/**
+ * Modules
+ */
+$app->get('/modules', 'CtrlModules:index')
+    ->add(new Authentication($container, $settings, '/modules'));
+$app->post('/module/install', 'CtrlModules:install')
+    ->add(new Authentication($container, $settings, '/modules'));
+$app->post('/module/uninstall', 'CtrlModules:uninstall')
+    ->add(new Authentication($container, $settings, '/modules'));
+$app->post('/module/update', 'CtrlModules:update')
+    ->add(new Authentication($container, $settings, '/modules'));
+
+/**
+ * OpenApi
+ */
+$app->get('/open-api', 'CtrlOpenApi:index')
+    ->add(new Authentication($container, $settings, '/login'));
+$app->get('/open-api/edit', 'CtrlOpenApi:edit')
+    ->add(new Authentication($container, $settings, '/login'));
+$app->post('/open-api/edit', 'CtrlOpenApi:edit')
+    ->add(new Authentication($container, $settings, '/login'));
+$app->get('/open-api/default', 'CtrlOpenApi:default')
+    ->add(new Authentication($container, $settings, '/login'));
+$app->get('/open-api/import', 'CtrlOpenApi:import')
+    ->add(new Authentication($container, $settings, '/login'));
+$app->post('/open-api/import', 'CtrlOpenApi:import')
+    ->add(new Authentication($container, $settings, '/login'));
 
 /**
  * Resources.
@@ -141,31 +169,3 @@ $app->post('/var/edit', 'CtrlVars:update')
     ->add(new Authentication($container, $settings, '/login'));
 $app->post('/var/delete', 'CtrlVars:delete')
     ->add(new Authentication($container, $settings, '/login'));
-
-/**
- * OpenApi
- */
-$app->get('/open-api', 'CtrlOpenApi:index')
-    ->add(new Authentication($container, $settings, '/login'));
-$app->get('/open-api/edit', 'CtrlOpenApi:edit')
-    ->add(new Authentication($container, $settings, '/login'));
-$app->post('/open-api/edit', 'CtrlOpenApi:edit')
-    ->add(new Authentication($container, $settings, '/login'));
-$app->get('/open-api/default', 'CtrlOpenApi:default')
-    ->add(new Authentication($container, $settings, '/login'));
-$app->get('/open-api/import', 'CtrlOpenApi:import')
-    ->add(new Authentication($container, $settings, '/login'));
-$app->post('/open-api/import', 'CtrlOpenApi:import')
-    ->add(new Authentication($container, $settings, '/login'));
-
-/**
- * Modules
- */
-$app->get('/modules', 'CtrlModules:index')
-    ->add(new Authentication($container, $settings, '/modules'));
-$app->post('/module/install', 'CtrlModules:install')
-    ->add(new Authentication($container, $settings, '/modules'));
-$app->post('/module/uninstall', 'CtrlModules:uninstall')
-    ->add(new Authentication($container, $settings, '/modules'));
-$app->post('/module/update', 'CtrlModules:update')
-    ->add(new Authentication($container, $settings, '/modules'));

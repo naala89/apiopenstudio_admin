@@ -53,7 +53,7 @@ $(document).ready(function () {
       $('#accid').formSelect()
 
       $('ul.tabs').tabs('select', 'yaml');
-      ['security', 'process', 'output'].forEach(function (item) {
+      ['security', 'process', 'fragments', 'output'].forEach(function (item) {
         if (typeof APIOPENSTUDIO.doc[item] !== 'undefined') {
           $('textarea[name=\'' + item + '\']').val(jsyaml.dump(APIOPENSTUDIO.doc[item]))
         } else {
@@ -88,7 +88,7 @@ $(document).ready(function () {
   $('#create-resource a[href=\'#yaml\']').on('click', function () {
     if (!$(this).hasClass('active')) {
       try {
-        ['security', 'process', 'output'].forEach(function (item) {
+        ['security', 'process', 'fragments', 'output'].forEach(function (item) {
           const obj = jsyaml.safeLoad($('textarea[name="' + item + '"]').val())
           if (typeof obj !== 'undefined') {
             $('textarea[name="' + item + '"]').val(jsyaml.dump(obj))
@@ -110,7 +110,7 @@ $(document).ready(function () {
   $('#create-resource a[href=\'#json\']').on('click', function () {
     if (!$(this).hasClass('active')) {
       try {
-        ['security', 'process', 'output'].forEach(function (item) {
+        ['security', 'process', 'fragments', 'output'].forEach(function (item) {
           const obj = jsyaml.safeLoad($('textarea[name="' + item + '"]').val())
           if (typeof obj !== 'undefined') {
             $('textarea[name="' + item + '"]').val(JSON.stringify(obj, null, 2))
