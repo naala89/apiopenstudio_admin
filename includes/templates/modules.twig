@@ -7,7 +7,24 @@
         <p>Manage your 3rd party plugins and processors here.</p>
     </div>
 
-    <div class="row table-header">
+    <div class="row">
+        <div class="input-field col s6">
+            <label for="package-name">Package</label>
+            <input placeholder="Package" id="package-name" type="text" class="validate">
+        </div>
+        <div class="col col-height s1 valign-wrapper">
+            <a class="btn-floating btn-medium cloud_download">
+                <i class="material-icons modal-trigger modal-composer-require-trigger" title="Install a composer package.">cloud_download</i>
+            </a>
+        </div>
+        <div class="col col-height s1 valign-wrapper">
+            <a class="btn-floating btn-medium delete_forever">
+                <i class="material-icons modal-trigger modal-composer-remove-trigger" title="Remove a composer package.">delete_forever</i>
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
         <h6 class="col col-height s3 valign-wrapper">Title</h6>
         <h6 class="col col-height s4 valign-wrapper">Machine name</h6>
         <h6 class="col col-height s2 valign-wrapper">Version</h6>
@@ -15,6 +32,7 @@
         <h6 class="col col-height s1 valign-wrapper">Uninstall</h6>
         <h6 class="col col-height s1 valign-wrapper">Update</h6>
     </div>
+
     {% for machine_name, details in modules %}
         <div class="row hoverable">
             <div class="col col-height s3 valign-wrapper" title="{{ details.details.description }}">
@@ -66,5 +84,9 @@
     {% include 'modals/module_uninstall.twig' %}
 
     {% include 'modals/module_update.twig' %}
+
+    {% include 'modals/composer_require.twig' %}
+
+    {% include 'modals/composer_remove.twig' %}
 
 {% endblock %}

@@ -1,0 +1,21 @@
+<!-- Install module modal -->
+<div id="modal-composer-remove" class="modal">
+    <form method="post" action="/composer/remove" id="composer-remove">
+
+        <input type="hidden" name="package" value="">
+
+        <div class="modal-content">
+            <h4>Remove package</h4>
+            <div class="row">
+                <div class="col s12">Remove package: <span class="package-name"></span></div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4 offset-s8">
+                    <a class="modal-action modal-close btn-flat">Cancel</a>
+                    <button class="btn add" type="submit">Remove</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
