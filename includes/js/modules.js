@@ -46,4 +46,30 @@ $(document).ready(function () {
     modal.find('span.module-name').html(moduleName)
     modal.modal('open')
   })
+
+  /**
+   * Composer require modal.
+   */
+  $('.modal-composer-require-trigger').click(function () {
+    const modal = $('#modal-composer-require')
+    const packageName = $('#package-name').val()
+    if (packageName !== '') {
+      modal.find('input[name="package"]').val(packageName)
+      modal.find('span.package-name').html(packageName)
+      modal.modal('open')
+    }
+  })
+
+  /**
+   * Composer remove modal.
+   */
+  $('.modal-composer-remove-trigger').click(function () {
+    const modal = $('#modal-composer-remove')
+    const packageName = $('#package-name').val()
+    if (packageName !== '') {
+      modal.find('input[name="package"]').val(packageName)
+      modal.find('span.package-name').html(packageName)
+      modal.modal('open')
+    }
+  })
 })
