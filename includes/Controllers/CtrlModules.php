@@ -205,4 +205,78 @@ class CtrlModules extends CtrlBase
 
         return $this->index($request, $response, $args);
     }
+
+    /**
+     * Composer require
+     *
+     * @param Request $request Request object.
+     * @param Response $response Response object.
+     * @param array $args Request args.
+     *
+     * @return ResponseInterface Response.
+     */
+    public function require(Request $request, Response $response, array $args): ResponseInterface
+    {
+        // Validate access.
+        if (!$this->checkAccess()) {
+            $this->flash->addMessage('error', 'Access modules: access denied');
+            return $response->withStatus(302)->withHeader('Location', '/');
+        }
+
+        $allPostVars = $request->getParams();
+        $payload = [];
+        $payload['package'] = !empty($allPostVars['package']) ? $allPostVars['package'] : null;
+
+        try {
+            $this->apiCall('post', 'composer', [
+                'headers' => [
+                    'Authorization' => "Bearer " . $_SESSION['token'],
+                    'Accept' => 'application/json',
+                ],
+                'form_params' => $payload,
+            ]);
+            $this->flash->addMessageNow('info', 'Package successfully installed.');
+        } catch (Exception $e) {
+            $this->flash->addMessageNow('error', $e->getMessage());
+        }
+
+        return $this->index($request, $response, $args);
+    }
+
+    /**
+     * Composer remove
+     *
+     * @param Request $request Request object.
+     * @param Response $response Response object.
+     * @param array $args Request args.
+     *
+     * @return ResponseInterface Response.
+     */
+    public function remove(Request $request, Response $response, array $args): ResponseInterface
+    {
+        // Validate access.
+        if (!$this->checkAccess()) {
+            $this->flash->addMessage('error', 'Access modules: access denied');
+            return $response->withStatus(302)->withHeader('Location', '/');
+        }
+
+        $allPostVars = $request->getParams();
+        $params = [];
+        $params['package'] = !empty($allPostVars['package']) ? $allPostVars['package'] : null;
+
+        try {
+            $this->apiCall('delete', 'composer', [
+                'headers' => [
+                    'Authorization' => "Bearer " . $_SESSION['token'],
+                    'Accept' => 'application/json',
+                ],
+                'query' => $params,
+            ]);
+            $this->flash->addMessageNow('info', 'Package successfully removed.');
+        } catch (Exception $e) {
+            $this->flash->addMessageNow('error', $e->getMessage());
+        }
+
+        return $this->index($request, $response, $args);
+    }
 }
