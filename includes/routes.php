@@ -89,6 +89,10 @@ $app->post('/composer/require', 'CtrlModules:require')
     ->add(new Authentication($container, $settings, '/modules'));
 $app->post('/composer/remove', 'CtrlModules:remove')
     ->add(new Authentication($container, $settings, '/modules'));
+$app->post('/repository/add', 'CtrlModules:repoAdd')
+    ->add(new Authentication($container, $settings, '/modules'));
+$app->post('/repository/remove', 'CtrlModules:repoRemove')
+    ->add(new Authentication($container, $settings, '/modules'));
 
 /**
  * OpenApi
