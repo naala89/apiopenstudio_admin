@@ -63,17 +63,31 @@ class CtrlModules extends CtrlBase
         $allParams = $request->getParams();
 
         try {
-            $result = $this->apiCall('get', 'modules', [
+            $ModuleResult = $this->apiCall('get', 'modules', [
                 'headers' => [
                     'Authorization' => "Bearer {$_SESSION['token']}",
                     'Accept' => 'application/json',
                 ]
             ]);
-            $result = json_decode($result->getBody()->getContents(), true);
-            $modules = isset($result['result']) && isset($result['data']) ? $result['data'] : $result;
+            $ModuleResult = json_decode($ModuleResult->getBody()->getContents(), true);
+            $modules = isset($ModuleResult['result']) && isset($ModuleResult['data']) ? $ModuleResult['data'] : $ModuleResult;
         } catch (Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
             $modules = [];
+        }
+
+        try {
+            $RepositoryResult = $this->apiCall('get', 'composer/repository', [
+                'headers' => [
+                    'Authorization' => "Bearer {$_SESSION['token']}",
+                    'Accept' => 'application/json',
+                ]
+            ]);
+            $RepositoryResult = json_decode($RepositoryResult->getBody()->getContents(), true);
+            $repositories = isset($RepositoryResult['result']) && isset($RepositoryResult['data']) ? $RepositoryResult['data'] : $RepositoryResult;
+        } catch (Exception $e) {
+            $this->flash->addMessageNow('error', $e->getMessage());
+            $repositories = [];
         }
 
         // Pagination.
@@ -89,6 +103,7 @@ class CtrlModules extends CtrlBase
         return $this->view->render($response, 'modules.twig', [
             'menu' => $menu,
             'modules' => $modules,
+            'repositories' => $repositories,
             'page' => $page,
             'pages' => $pages,
             'messages' => $this->flash->getMessages(),
@@ -117,14 +132,18 @@ class CtrlModules extends CtrlBase
         $payload['machine_name'] = !empty($allPostVars['machine_name']) ? $allPostVars['machine_name'] : null;
 
         try {
-            $this->apiCall('post', 'modules', [
+            $result = $this->apiCall('post', 'modules', [
                 'headers' => [
                     'Authorization' => "Bearer " . $_SESSION['token'],
                     'Accept' => 'application/json',
                 ],
                 'form_params' => $payload,
             ]);
-            $this->flash->addMessageNow('info', 'Module successfully installed.');
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
+            $this->flash->addMessageNow('info', $result);
         } catch (Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
@@ -154,14 +173,18 @@ class CtrlModules extends CtrlBase
         $params['machine_name'] = !empty($allPostVars['machine_name']) ? $allPostVars['machine_name'] : null;
 
         try {
-            $this->apiCall('delete', 'modules', [
+            $result = $this->apiCall('delete', 'modules', [
                 'headers' => [
                     'Authorization' => "Bearer " . $_SESSION['token'],
                     'Accept' => 'application/json',
                 ],
                 'query' => $params,
             ]);
-            $this->flash->addMessageNow('info', 'Module successfully uninstalled.');
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
+            $this->flash->addMessageNow('info', $result);
         } catch (Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }
@@ -191,14 +214,183 @@ class CtrlModules extends CtrlBase
         $params['machine_name'] = !empty($allPostVars['machine_name']) ? $allPostVars['machine_name'] : null;
 
         try {
-            $this->apiCall('put', 'modules', [
+            $result = $this->apiCall('put', 'modules', [
                 'headers' => [
                     'Authorization' => "Bearer " . $_SESSION['token'],
                     'Accept' => 'application/json',
                 ],
                 'query' => $params,
             ]);
-            $this->flash->addMessageNow('info', 'Module successfully updated.');
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
+            $this->flash->addMessageNow('info', $result);
+        } catch (Exception $e) {
+            $this->flash->addMessageNow('error', $e->getMessage());
+        }
+
+        return $this->index($request, $response, $args);
+    }
+
+    /**
+     * Composer require
+     *
+     * @param Request $request Request object.
+     * @param Response $response Response object.
+     * @param array $args Request args.
+     *
+     * @return ResponseInterface Response.
+     */
+    public function require(Request $request, Response $response, array $args): ResponseInterface
+    {
+        // Validate access.
+        if (!$this->checkAccess()) {
+            $this->flash->addMessage('error', 'Access modules: access denied');
+            return $response->withStatus(302)->withHeader('Location', '/');
+        }
+
+        $allPostVars = $request->getParams();
+        $payload = [];
+        $payload['package'] = !empty($allPostVars['package']) ? $allPostVars['package'] : null;
+
+        try {
+            $result = $this->apiCall('post', 'composer', [
+                'headers' => [
+                    'Authorization' => "Bearer " . $_SESSION['token'],
+                    'Accept' => 'application/json',
+                ],
+                'form_params' => $payload,
+            ]);
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
+            $this->flash->addMessageNow('info', $result);
+        } catch (Exception $e) {
+            $this->flash->addMessageNow('error', $e->getMessage());
+        }
+
+        return $this->index($request, $response, $args);
+    }
+
+    /**
+     * Composer remove
+     *
+     * @param Request $request Request object.
+     * @param Response $response Response object.
+     * @param array $args Request args.
+     *
+     * @return ResponseInterface Response.
+     */
+    public function remove(Request $request, Response $response, array $args): ResponseInterface
+    {
+        // Validate access.
+        if (!$this->checkAccess()) {
+            $this->flash->addMessage('error', 'Access modules: access denied');
+            return $response->withStatus(302)->withHeader('Location', '/');
+        }
+
+        $allPostVars = $request->getParams();
+        $params = [];
+        $params['package'] = !empty($allPostVars['package']) ? $allPostVars['package'] : null;
+
+        try {
+            $result = $this->apiCall('delete', 'composer', [
+                'headers' => [
+                    'Authorization' => "Bearer " . $_SESSION['token'],
+                    'Accept' => 'application/json',
+                ],
+                'query' => $params,
+            ]);
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
+            $this->flash->addMessageNow('info', $result);
+        } catch (Exception $e) {
+            $this->flash->addMessageNow('error', $e->getMessage());
+        }
+
+        return $this->index($request, $response, $args);
+    }
+
+    /**
+     * Composer repository add
+     *
+     * @param Request $request Request object.
+     * @param Response $response Response object.
+     * @param array $args Request args.
+     *
+     * @return ResponseInterface Response.
+     */
+    public function repoAdd(Request $request, Response $response, array $args): ResponseInterface
+    {
+        // Validate access.
+        if (!$this->checkAccess()) {
+            $this->flash->addMessage('error', 'Access modules: access denied');
+            return $response->withStatus(302)->withHeader('Location', '/');
+        }
+
+        $allPostVars = $request->getParams();
+        $payload = [];
+        $payload['repository_key'] = !empty($allPostVars['repository-key']) ? $allPostVars['repository-key'] : null;
+        $payload['repository_url'] = !empty($allPostVars['repository-url']) ? $allPostVars['repository-url'] : null;
+
+        try {
+            $result = $this->apiCall('post', 'composer/repository', [
+                'headers' => [
+                    'Authorization' => "Bearer " . $_SESSION['token'],
+                    'Accept' => 'application/json',
+                ],
+                'form_params' => $payload,
+            ]);
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
+            $this->flash->addMessageNow('info', $result);
+        } catch (Exception $e) {
+            $this->flash->addMessageNow('error', $e->getMessage());
+        }
+
+        return $this->index($request, $response, $args);
+    }
+
+    /**
+     * Composer repository remove
+     *
+     * @param Request $request Request object.
+     * @param Response $response Response object.
+     * @param array $args Request args.
+     *
+     * @return ResponseInterface Response.
+     */
+    public function repoRemove(Request $request, Response $response, array $args): ResponseInterface
+    {
+        // Validate access.
+        if (!$this->checkAccess()) {
+            $this->flash->addMessage('error', 'Access modules: access denied');
+            return $response->withStatus(302)->withHeader('Location', '/');
+        }
+
+        $allPostVars = $request->getParams();
+        $params = [];
+        $params['repository_key'] = !empty($allPostVars['repository_key']) ? $allPostVars['repository_key'] : null;
+
+        try {
+            $result = $this->apiCall('delete', 'composer/repository', [
+                'headers' => [
+                    'Authorization' => "Bearer " . $_SESSION['token'],
+                    'Accept' => 'application/json',
+                ],
+                'query' => $params,
+            ]);
+            $result = json_decode($result->getBody()->getContents(), true);
+            if (isset($result['result']) && $result['result'] == 'ok' && isset($result['data'])) {
+                $result = $result['data'];
+            }
+            $this->flash->addMessageNow('info', $result);
         } catch (Exception $e) {
             $this->flash->addMessageNow('error', $e->getMessage());
         }

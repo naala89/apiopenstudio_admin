@@ -46,4 +46,43 @@ $(document).ready(function () {
     modal.find('span.module-name').html(moduleName)
     modal.modal('open')
   })
+
+  /**
+   * Composer require modal.
+   */
+  $('.modal-composer-require-trigger').click(function () {
+    const modal = $('#modal-composer-require')
+    const packageName = $('#package-name').val()
+    if (packageName !== '') {
+      modal.find('input[name="package"]').val(packageName)
+      modal.find('span.package').html(packageName)
+      modal.modal('open')
+    }
+  })
+
+  /**
+   * Composer remove modal.
+   */
+  $('.modal-composer-remove-trigger').click(function () {
+    const modal = $('#modal-composer-remove')
+    const packageName = $('#package-name').val()
+    if (packageName !== '') {
+      modal.find('input[name="package"]').val(packageName)
+      modal.find('span.package').html(packageName)
+      modal.modal('open')
+    }
+  })
+
+  /**
+   * Composer repository remove modal.
+   */
+  $('.modal-repository-remove-trigger').click(function () {
+    const modal = $('#modal-repository-remove')
+    const repositoryKey = $(this).attr('repository_key')
+    if (repositoryKey !== '') {
+      modal.find('input[name="repository_key"]').val(repositoryKey)
+      modal.find('span.repository-key').html(repositoryKey)
+      modal.modal('open')
+    }
+  })
 })
