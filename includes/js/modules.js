@@ -55,7 +55,7 @@ $(document).ready(function () {
     const packageName = $('#package-name').val()
     if (packageName !== '') {
       modal.find('input[name="package"]').val(packageName)
-      modal.find('span.package-name').html(packageName)
+      modal.find('span.package').html(packageName)
       modal.modal('open')
     }
   })
@@ -68,7 +68,20 @@ $(document).ready(function () {
     const packageName = $('#package-name').val()
     if (packageName !== '') {
       modal.find('input[name="package"]').val(packageName)
-      modal.find('span.package-name').html(packageName)
+      modal.find('span.package').html(packageName)
+      modal.modal('open')
+    }
+  })
+
+  /**
+   * Composer repository remove modal.
+   */
+  $('.modal-repository-remove-trigger').click(function () {
+    const modal = $('#modal-repository-remove')
+    const repositoryKey = $(this).attr('repository_key')
+    if (repositoryKey !== '') {
+      modal.find('input[name="repository_key"]').val(repositoryKey)
+      modal.find('span.repository-key').html(repositoryKey)
       modal.modal('open')
     }
   })

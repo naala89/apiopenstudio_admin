@@ -1,13 +1,13 @@
-<!-- Install module modal -->
-<div id="modal-composer-remove" class="modal">
-    <form method="post" action="/composer/remove" id="composer-remove">
+<!-- Uninstall module modal -->
+<div id="modal-repository-remove" class="modal">
+    <form method="post" action="/repository/remove" id="repository-remove">
 
-        <input type="hidden" name="package" value="">
+        <input type="hidden" name="repository_key" value="">
 
         <div class="modal-content">
-            <h4>Remove package</h4>
+            <h4>Remove repository</h4>
             <div class="row">
-                <div class="col s12">Remove package: <span class="package"></span></div>
+                <div class="col s12">Remove repository: <span class="repository-key"></span></div>
             </div>
             <div class="row">
                 <div class="input-field col s4 offset-s8">
