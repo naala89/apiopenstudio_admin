@@ -251,3 +251,19 @@ $container['CtrlOpenApi'] = function (Container $container) {
     $flash = $container->get('flash');
     return new Controllers\CtrlOpenApi($settings, $view, $flash);
 };
+
+/**
+ * Register OpenApi controller.
+ *
+ * @param Container $container
+ *   Slim container.
+ *
+ * @return Controllers\CtrlModules
+ *   CtrlOpenApi object.
+ */
+$container['CtrlModules'] = function (Container $container) {
+    $settings = $container->get('settings');
+    $view = $container->get('view');
+    $flash = $container->get('flash');
+    return new Controllers\CtrlModules($settings, $view, $flash);
+};
